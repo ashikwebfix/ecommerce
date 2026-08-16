@@ -316,10 +316,10 @@ const AdminOrderDetails = () => {
                 <img src="/logo.svg" alt="Kinaboo" style={{ height: '32px' }} />
               </div>
               <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                Mirpur dohs, road 9 ave 9 house 1035<br />
+                Rd 53, Gulshan 2<br />
                 Dhaka, Bangladesh<br />
                 support@kinaboo.com<br />
-                +880 1349-030417
+                01354-557477
               </div>
             </div>
           </div>

@@ -330,7 +330,7 @@ const ProductDetails = () => {
           {/* Quantity & Actions */}
           <div style={{ marginBottom: '2rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-              <label style={{ fontWeight: '600' }}>Quantity</label>
+              <label style={{ fontWeight: '600' }}>পরিমাণ</label>
               <select className="input-field" style={{ width: '100px' }} value={qty} onChange={(e) => setQty(Number(e.target.value))}>
                 {[...Array(product.allowSellWithoutStock ? 10 : (product.stock > 0 ? Math.min(product.stock, 10) : 0)).keys()].map(x => (
                   <option key={x+1} value={x+1}>{x+1}</option>
@@ -351,7 +351,7 @@ const ProductDetails = () => {
                   transition: 'all 0.3s'
                 }}
               >
-                {(product.stock <= 0 && !product.allowSellWithoutStock) ? 'Out of Stock' : (isAdded ? 'Added to Cart ✓' : 'Add to Cart')}
+                {(product.stock <= 0 && !product.allowSellWithoutStock) ? 'স্টক শেষ' : (isAdded ? 'কার্টে যোগ করা হয়েছে ✓' : 'কার্টে যোগ করুন')}
               </button>
               
               <button 
@@ -360,7 +360,7 @@ const ProductDetails = () => {
                 onClick={handleBuyNow}
                 style={{ padding: '1rem', fontSize: '1.1rem', fontWeight: '600', flex: 1 }}
               >
-                Buy It Now
+                এখুনি কিনুন
               </button>
             </div>
           </div>
@@ -369,7 +369,7 @@ const ProductDetails = () => {
           {product.stock > 0 && product.stock <= 20 && (
             <div style={{ marginBottom: '1.5rem', padding: '1rem', background: '#fff1f2', border: '1px solid #fecdd3', borderRadius: '8px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.95rem', fontWeight: '600', color: '#be123c' }}>
-                <span>🔥 Hurry! Only {product.stock} left in stock.</span>
+                <span>🔥 দ্রুত করুন! আর মাত্র {product.stock} টি স্টকে আছে।</span>
               </div>
               <div style={{ width: '100%', height: '8px', background: '#ffe4e6', borderRadius: '4px', overflow: 'hidden' }}>
                 <div style={{ width: `${(product.stock / 20) * 100}%`, height: '100%', background: '#e11d48', transition: 'width 0.5s ease-in-out' }}></div>
@@ -381,7 +381,7 @@ const ProductDetails = () => {
           {comboBundle && comboProducts.length > 0 && (
             <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--accent-primary)' }}>✨</span> Frequently Bought Together
+                <span style={{ color: 'var(--accent-primary)' }}>✨</span> একসাথে কিনুন
               </h3>
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
@@ -402,7 +402,7 @@ const ProductDetails = () => {
               
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--text-primary)' }}><strong>This item:</strong> {product.name}</span>
+                  <span style={{ color: 'var(--text-primary)' }}><strong>এই পণ্যটি:</strong> {product.name}</span>
                   <span style={{ fontWeight: 600 }}>{Number(product.sellPrice || product.price).toFixed(2)} BDT</span>
                 </div>
                 {comboProducts.map(cp => (
@@ -423,7 +423,7 @@ const ProductDetails = () => {
                 return (
                   <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                      <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Total Price:</span>
+                      <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>মোট দাম:</span>
                       <div style={{ textAlign: 'right' }}>
                         <div style={{ textDecoration: 'line-through', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{originalTotal.toFixed(2)} BDT</div>
                         <div style={{ color: 'var(--accent-primary)', fontSize: '1.5rem', fontWeight: 700 }}>{finalTotal.toFixed(2)} BDT</div>
@@ -434,7 +434,7 @@ const ProductDetails = () => {
                       className="btn btn-primary" 
                       style={{ width: '100%', padding: '0.75rem', fontWeight: 600, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
                     >
-                      Add Bundle to Cart
+                      বান্ডেল কার্টে যোগ করুন
                     </button>
                   </div>
                 );
@@ -445,7 +445,7 @@ const ProductDetails = () => {
           {/* CRO Trust Area Image Badge */}
           <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              Guaranteed Safe Checkout
+              নিরাপদ চেকআউট গ্যারান্টি
             </div>
             {/* Using a reliable placeholder for trust badges. You can replace the src with your own image url later. */}
             <img 
@@ -495,7 +495,7 @@ const ProductDetails = () => {
         {/* Full Description */}
         {product.longDescription && (
           <div style={{ marginBottom: '4rem' }}>
-            <h2 className="heading-lg" style={{ marginBottom: '2rem', textAlign: 'center', fontSize: '2rem' }}>Product Details</h2>
+            <h2 className="heading-lg" style={{ marginBottom: '2rem', textAlign: 'center', fontSize: '2rem' }}>প্রোডাক্টের বিবরণ</h2>
             <div 
               className="rich-text-content"
               style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-secondary)' }}
@@ -537,7 +537,7 @@ const ProductDetails = () => {
         {/* FAQs */}
         {product.faq && product.faq.some(item => item.question && item.question.trim() !== '') && (
           <div style={{ marginBottom: '4rem' }}>
-            <h2 className="heading-lg" style={{ marginBottom: '2rem', textAlign: 'center' }}>Frequently Asked Questions</h2>
+            <h2 className="heading-lg" style={{ marginBottom: '2rem', textAlign: 'center' }}>সাধারণ জিজ্ঞাসা (FAQ)</h2>
             <div>
               {product.faq.map((item, idx) => (
                 <div key={idx} style={{ borderBottom: '1px solid var(--border-color)', marginBottom: '1rem' }}>
@@ -563,7 +563,7 @@ const ProductDetails = () => {
       {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div style={{ marginTop: '4rem' }}>
-          <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>You Might Also Like</h2>
+          <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>আপনার জন্য আরও কিছু পণ্য</h2>
           <div className="grid-cols-auto">
             {relatedProducts.map(rp => (
               <ProductCard key={rp.id} product={rp} />

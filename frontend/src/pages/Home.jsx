@@ -135,7 +135,7 @@ const Home = () => {
                   {slide.title}
                 </h2>
                 <button className="btn btn-primary" style={{ alignSelf: 'flex-start', padding: '1rem 2.5rem', fontSize: '1.1rem' }} onClick={() => window.location.href = slide.link || '/shop'}>
-                  Shop Now
+                  এখুনি কিনুন
                 </button>
               </div>
             </div>
@@ -160,10 +160,10 @@ const Home = () => {
         <div style={{ flex: '1 1 30%', minWidth: '250px', borderRadius: '16px', overflow: 'hidden', position: 'relative', height: '450px', background: 'var(--accent-primary)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '2.5rem', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
            <div style={{ position: 'absolute', inset: 0, opacity: 0.1, background: 'radial-gradient(circle at top right, white, transparent 70%)' }}></div>
            <div style={{ position: 'relative', zIndex: 1 }}>
-             <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: '800', marginBottom: '1rem', lineHeight: '1.2' }}>Special Deal</h3>
-             <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.1rem', marginBottom: '2rem' }}>Get 20% off on all newly arrived premium items this week.</p>
+             <h3 style={{ color: 'white', fontSize: '2rem', fontWeight: '800', marginBottom: '1rem', lineHeight: '1.2' }}>স্পেশাল অফার</h3>
+             <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.1rem', marginBottom: '2rem' }}>নতুন সব পণ্যে ২০% ছাড়!</p>
              <button style={{ background: 'var(--accent-secondary)', color: 'var(--text-primary)', border: 'none', padding: '0.875rem 2rem', borderRadius: '99px', fontWeight: '700', fontSize: '1.1rem', cursor: 'pointer', transition: 'transform 0.2s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}>
-               Claim Offer
+               অফারটি গ্রহণ করুন
              </button>
            </div>
         </div>
@@ -174,19 +174,19 @@ const Home = () => {
         <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" alt="Watches" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Smart Watches</h3>
+             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>স্মার্ট ওয়াচ</h3>
            </div>
         </div>
         <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&q=80&w=800" alt="Cameras" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Digital Cameras</h3>
+             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ডিজিটাল ক্যামেরা</h3>
            </div>
         </div>
         <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800" alt="Audio" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Premium Audio</h3>
+             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>অডিও গ্যাজেটস</h3>
            </div>
         </div>
       </div>
@@ -195,15 +195,15 @@ const Home = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', textAlign: 'center', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0', marginBottom: '4rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
           <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><Truck size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>Free Shipping</span>
+          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>ফ্রি শিপিং</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
           <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><ShieldCheck size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>Secure Checkout</span>
+          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>নিরাপদ পেমেন্ট</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
           <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><RotateCcw size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>30-Day Returns</span>
+          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>৩০-দিন রিটার্ন পলিসি</span>
         </div>
       </div>
 
@@ -215,10 +215,10 @@ const Home = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '2rem', position: 'relative', zIndex: 1 }}>
           <div>
             <h2 style={{ fontSize: '2.5rem', fontWeight: '800', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              ⚡ Super Hour Deals
+              ⚡ সুপার আওয়ার ডিলস
             </h2>
             <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.8)', margin: 0 }}>
-              Grab our premium items at unbeatable prices before time runs out!
+              সময় শেষ হওয়ার আগেই দারুণ সব অফারে আপনার পছন্দের পণ্যটি বুঝে নিন!
             </p>
           </div>
           
@@ -285,10 +285,10 @@ const Home = () => {
       <div id="featured" style={{ marginBottom: '4rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem' }}>
           <div>
-            <h2 className="heading-lg" style={{ margin: 0 }}>{uiConfig?.featuredProducts?.title || 'Featured Products'}</h2>
+            <h2 className="heading-lg" style={{ margin: 0 }}>{uiConfig?.featuredProducts?.title || 'ফিচারড প্রোডাক্ট'}</h2>
             <div style={{ width: '80px', height: '4px', background: 'var(--accent-secondary)', marginTop: '0.75rem', borderRadius: '2px' }}></div>
           </div>
-          <button className="btn btn-secondary" style={{ padding: '0.5rem 1.5rem' }}>View All</button>
+          <button className="btn btn-secondary" style={{ padding: '0.5rem 1.5rem' }}>সব দেখুন</button>
         </div>
 
         {loading ? (
@@ -312,7 +312,7 @@ const Home = () => {
               <h2 className="heading-lg" style={{ margin: 0 }}>{section.title}</h2>
               <div style={{ width: '80px', height: '4px', background: 'var(--accent-secondary)', marginTop: '0.75rem', borderRadius: '2px' }}></div>
             </div>
-            <button className="btn btn-secondary" style={{ padding: '0.5rem 1.5rem' }}>View All</button>
+            <button className="btn btn-secondary" style={{ padding: '0.5rem 1.5rem' }}>সব দেখুন</button>
           </div>
 
           <div className="featured-products-grid">

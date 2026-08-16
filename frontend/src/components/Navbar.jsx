@@ -80,7 +80,7 @@ const Navbar = () => {
         <form onSubmit={handleSearch} style={{ flex: 1, maxWidth: '500px', display: 'flex', position: 'relative' }}>
           <input 
             type="text" 
-            placeholder="Search products..." 
+            placeholder="পণ্য খুঁজুন..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => { if (searchQuery.length >= 3 && liveResults.length > 0) setShowDropdown(true); }}
@@ -117,7 +117,7 @@ const Navbar = () => {
                     onMouseOver={e => e.currentTarget.style.background = '#f1f5f9'}
                     onMouseOut={e => e.currentTarget.style.background = '#f8fafc'}
                   >
-                    Show all results for "{searchQuery}"
+                    "{searchQuery}" এর সব রেজাল্ট দেখুন
                   </Link>
                 </div>
               ) : (

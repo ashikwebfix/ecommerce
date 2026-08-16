@@ -86,11 +86,11 @@ const ProductFilterSidebar = ({
         }}
       >
         <Filter size={20} />
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>Filters</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>ফিল্টার</h2>
       </div>
 
       <div className="filter-section">
-        <h3 className="filter-title">Max Price: {maxPrice} BDT</h3>
+        <h3 className="filter-title">সর্বোচ্চ দাম: {maxPrice} BDT</h3>
         <input
           type="range"
           min="0"
@@ -123,11 +123,11 @@ const ProductFilterSidebar = ({
 
       {showSearch && setSearchQuery && (
         <div className="filter-section">
-          <h3 className="filter-title">Search</h3>
+          <h3 className="filter-title">খুঁজুন</h3>
           <input
             type="text"
             className="input-field"
-            placeholder="Search products..."
+            placeholder="পণ্য খুঁজুন..."
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -139,7 +139,7 @@ const ProductFilterSidebar = ({
       )}
 
       <div className="filter-section">
-        <h3 className="filter-title">Categories</h3>
+        <h3 className="filter-title">ক্যাটাগরি</h3>
         {categories.length > 0 ? (
           categories.map((category) => (
             <label key={category} className="checkbox-label">
@@ -153,13 +153,13 @@ const ProductFilterSidebar = ({
           ))
         ) : (
           <span className="text-muted" style={{ fontSize: '0.9rem' }}>
-            No categories available
+            কোনো ক্যাটাগরি পাওয়া যায়নি
           </span>
         )}
       </div>
 
       <div className="filter-section">
-        <h3 className="filter-title">Tags</h3>
+        <h3 className="filter-title">ট্যাগ</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {allTags.length > 0 ? (
             allTags.map((tag) => (
@@ -191,14 +191,14 @@ const ProductFilterSidebar = ({
             ))
           ) : (
             <span className="text-muted" style={{ fontSize: '0.9rem' }}>
-              No tags available
+              কোনো ট্যাগ পাওয়া যায়নি
             </span>
           )}
         </div>
       </div>
 
       <div className="filter-section">
-        <h3 className="filter-title">Availability</h3>
+        <h3 className="filter-title">স্টক অবস্থা</h3>
         <label className="checkbox-label">
           <input
             type="checkbox"
@@ -208,7 +208,7 @@ const ProductFilterSidebar = ({
               if (setCurrentPage) setCurrentPage(1);
             }}
           />
-          In Stock Only
+          শুধুমাত্র স্টকে থাকা পণ্য
         </label>
       </div>
 
@@ -217,7 +217,7 @@ const ProductFilterSidebar = ({
         style={{ width: '100%' }}
         onClick={clearFilters}
       >
-        Clear Filters
+        সব ফিল্টার মুছে ফেলুন
       </button>
     </aside>
   );

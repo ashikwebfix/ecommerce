@@ -145,8 +145,8 @@ const Shop = () => {
           style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.7), transparent)', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '3rem' }}>
-          <h1 style={{ color: 'white', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '800', margin: 0 }}>Shop Our Collection</h1>
-          <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.1rem', marginTop: '0.5rem', maxWidth: '500px' }}>Discover our premium, hand-picked selection designed just for you.</p>
+          <h1 style={{ color: 'white', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '800', margin: 0 }}>আমাদের কালেকশন দেখুন</h1>
+          <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.1rem', marginTop: '0.5rem', maxWidth: '500px' }}>আপনার জন্য বিশেষভাবে বাছাই করা সেরা পণ্যগুলো আবিষ্কার করুন।</p>
         </div>
       </div>
 
@@ -174,21 +174,21 @@ const Shop = () => {
           {/* Header Bar */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', background: 'var(--card-bg)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)', marginBottom: '2rem' }}>
             <div style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>
-              Showing {filteredProducts.length === 0 ? 0 : indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} of {filteredProducts.length} results
+              দেখাচ্ছে {filteredProducts.length === 0 ? 0 : indexOfFirstItem + 1}-{Math.min(indexOfLastItem, filteredProducts.length)} টি (মোট {filteredProducts.length} টি প্রোডাক্টের মধ্যে)
             </div>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Sort By:</span>
+              <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>সাজান:</span>
               <select 
                 className="input-field" 
                 style={{ padding: '0.5rem 1rem', width: 'auto', background: '#f8fafc', fontWeight: '500', cursor: 'pointer' }}
                 value={sortBy}
                 onChange={(e) => { setSortBy(e.target.value); setCurrentPage(1); }}
               >
-                <option value="featured">Featured</option>
-                <option value="newest">Newest Arrivals</option>
-                <option value="price_asc">Price: Low to High</option>
-                <option value="price_desc">Price: High to Low</option>
+                <option value="featured">ফিচারড</option>
+                <option value="newest">নতুন প্রোডাক্ট</option>
+                <option value="price_asc">দাম: কম থেকে বেশি</option>
+                <option value="price_desc">দাম: বেশি থেকে কম</option>
               </select>
             </div>
           </div>
@@ -239,8 +239,8 @@ const Shop = () => {
             </>
           ) : (
             <div style={{ textAlign: 'center', padding: '6rem 2rem', background: '#f8fafc', borderRadius: '16px', border: '1px dashed var(--border-color)' }}>
-              <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1rem' }}>No products match your filters</h3>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Try adjusting your categories or price range to find what you're looking for.</p>
+              <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1rem' }}>আপনার সার্চ অনুযায়ী কোনো পণ্য পাওয়া যায়নি</h3>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>আপনার প্রয়োজনীয় পণ্যটি পেতে অন্য কোনো ক্যাটাগরি বা দামের রেঞ্জ সিলেক্ট করে দেখুন।</p>
               <button 
                 className="btn btn-primary"
                 onClick={() => {
@@ -251,7 +251,7 @@ const Shop = () => {
                   setCurrentPage(1);
                 }}
               >
-                Clear All Filters
+                সব ফিল্টার মুছে ফেলুন
               </button>
             </div>
           )}

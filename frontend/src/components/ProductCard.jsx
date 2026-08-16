@@ -18,7 +18,7 @@ const ProductCard = ({ product, showRating }) => {
     e.preventDefault();
     addToCart(product);
     setIsAdded(true);
-    toast.success('Added to Cart!');
+    toast.success('কার্টে যোগ করা হয়েছে!');
     setTimeout(() => setIsAdded(false), 2000);
   };
 
@@ -60,11 +60,11 @@ const ProductCard = ({ product, showRating }) => {
       {/* Top Left Badges */}
       <div style={{ position: 'absolute', top: '1rem', left: '1rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         <span style={{ background: 'var(--accent-primary)', color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.35rem 0.75rem', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-          New
+          নতুন
         </span>
         {discountPercent > 0 && (
           <span style={{ background: '#ef4444', color: 'white', fontSize: '0.7rem', fontWeight: '700', padding: '0.35rem 0.75rem', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
-            {discountPercent}% OFF
+            {discountPercent}% ছাড়
           </span>
         )}
       </div>
@@ -75,7 +75,7 @@ const ProductCard = ({ product, showRating }) => {
            onClick={(e) => { 
              e.preventDefault(); 
              toggleFavorite(product);
-             toast.success(isProductFavorite ? 'Removed from Favorites' : 'Added to Favorites', { icon: '❤️' });
+             toast.success(isProductFavorite ? 'ফেভারিট থেকে রিমুভ করা হয়েছে' : 'ফেভারিটে যোগ করা হয়েছে', { icon: '❤️' });
            }} 
            style={{ 
              background: 'rgba(255,255,255,0.95)', border: 'none', width: '38px', height: '38px', 
@@ -162,7 +162,7 @@ const ProductCard = ({ product, showRating }) => {
           </div>
           
           <button 
-            title={product.stock <= 0 && !product.allowSellWithoutStock ? "Out of stock" : "Add to cart"}
+            title={product.stock <= 0 && !product.allowSellWithoutStock ? "স্টক শেষ" : "কার্টে যোগ করুন"}
             disabled={product.stock <= 0 && !product.allowSellWithoutStock}
             onMouseOver={e => !(product.stock <= 0 && !product.allowSellWithoutStock) && (e.currentTarget.style.color = isAdded ? 'var(--accent-primary)' : 'var(--accent-primary)')}
             onMouseOut={e => !(product.stock <= 0 && !product.allowSellWithoutStock) && (e.currentTarget.style.color = isAdded ? 'var(--accent-primary)' : 'var(--text-secondary)')}
@@ -197,14 +197,14 @@ const ProductCard = ({ product, showRating }) => {
             fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase',
             marginTop: 'auto'
           }} 
-          title={(product.stock <= 0 && !product.allowSellWithoutStock) ? "Out of Stock" : "Buy Now"}
+          title={(product.stock <= 0 && !product.allowSellWithoutStock) ? "স্টক শেষ" : "এখুনি কিনুন"}
           disabled={product.stock <= 0 && !product.allowSellWithoutStock}
           onClick={(e) => {
             e.preventDefault();
             if (!(product.stock <= 0 && !product.allowSellWithoutStock)) setShowExpressModal(true);
           }}
         >
-          <Zap size={16} fill={isHovered && !(product.stock <= 0 && !product.allowSellWithoutStock) ? "white" : "none"} /> {(product.stock <= 0 && !product.allowSellWithoutStock) ? "Out of Stock" : "Buy Now"}
+          <Zap size={16} fill={isHovered && !(product.stock <= 0 && !product.allowSellWithoutStock) ? "white" : "none"} /> {(product.stock <= 0 && !product.allowSellWithoutStock) ? "স্টক শেষ" : "এখুনি কিনুন"}
         </button>
       </div>
 

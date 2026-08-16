@@ -171,18 +171,18 @@ const Checkout = () => {
         const responseData = await res.json();
         trackPurchase(responseData, cartItems);
         clearCart();
-        alert('Order placed successfully! We will process it shortly.');
+        alert('অর্ডার সফলভাবে সম্পন্ন হয়েছে! আমরা শীঘ্রই যোগাযোগ করব।');
         if (userInfo) {
           navigate('/profile');
         } else {
           navigate('/');
         }
       } else {
-        alert('Failed to place order.');
+        alert('অর্ডার সম্পন্ন করতে সমস্যা হয়েছে।');
       }
     } catch (error) {
       console.error(error);
-      alert('Error placing order.');
+      alert('অর্ডার প্লেস করতে সমস্যা হয়েছে।');
     } finally {
       setIsSubmitting(false);
     }
@@ -203,41 +203,41 @@ const Checkout = () => {
             
             {/* Contact Section */}
             <section>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>Contact Information</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>যোগাযোগের তথ্য</h2>
               <div style={{ display: 'grid', gap: '1rem' }}>
-                <input required className="input-field" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} style={{ padding: '0.875rem' }} />
-                <input required className="input-field" placeholder="Phone Number" value={phone} onChange={e => setPhone(e.target.value)} style={{ padding: '0.875rem' }} />
+                <input required className="input-field" placeholder="সম্পূর্ণ নাম" value={name} onChange={e => setName(e.target.value)} style={{ padding: '0.875rem' }} />
+                <input required className="input-field" placeholder="ফোন নাম্বার" value={phone} onChange={e => setPhone(e.target.value)} style={{ padding: '0.875rem' }} />
               </div>
             </section>
 
             {/* Delivery Section */}
             <section>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>Shipping Address</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>ডেলিভারির ঠিকানা</h2>
               <div style={{ display: 'grid', gap: '1rem' }}>
                 <select className="input-field" value={selectedMethodId} onChange={e => setSelectedMethodId(e.target.value)} style={{ padding: '0.875rem', backgroundColor: '#fff' }}>
                   {deliveryMethods.map(m => (
                     <option key={m.id} value={m.id}>{m.name} ({m.charge} BDT)</option>
                   ))}
                 </select>
-                <textarea required className="input-field" rows="3" placeholder="Full Address (House, Road, Area, City)" value={address} onChange={e => setAddress(e.target.value)} style={{ padding: '0.875rem', resize: 'none' }} />
+                <textarea required className="input-field" rows="3" placeholder="সম্পূর্ণ ঠিকানা (বাড়ি, রাস্তা, এলাকা, শহর)" value={address} onChange={e => setAddress(e.target.value)} style={{ padding: '0.875rem', resize: 'none' }} />
               </div>
             </section>
 
             {/* Payment Section */}
             <section>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>Payment Method</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>পেমেন্ট মাধ্যম</h2>
               <div style={{ border: '1px solid var(--accent-primary)', background: '#f8fafc', padding: '1rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#fff' }} />
                 </div>
-                <span style={{ fontWeight: 500, color: '#0f172a' }}>Cash on Delivery (Pay when you receive)</span>
+                <span style={{ fontWeight: 500, color: '#0f172a' }}>ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে পেমেন্ট করুন)</span>
               </div>
             </section>
 
             {/* Actions */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
               <Link to="/cart" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 500 }}>
-                <ChevronLeft size={18} /> Return to cart
+                <ChevronLeft size={18} /> কার্টে ফিরে যান
               </Link>
               <button 
                 type="submit" 
@@ -245,7 +245,7 @@ const Checkout = () => {
                 disabled={isSubmitting || cartItems.some(i => i.stock <= 0 && !i.allowSellWithoutStock)}
                 style={{ padding: '1.25rem 2rem', fontSize: '1.1rem', fontWeight: 600, borderRadius: '8px', background: 'var(--accent-primary)' }}
               >
-                {isSubmitting ? 'Processing...' : (cartItems.some(i => i.stock <= 0 && !i.allowSellWithoutStock) ? 'Out of Stock Items in Cart' : 'Complete Order')}
+                {isSubmitting ? 'প্রসেসিং...' : (cartItems.some(i => i.stock <= 0 && !i.allowSellWithoutStock) ? 'কার্টে স্টক বিহীন পণ্য আছে' : 'অর্ডার কনফার্ম করুন')}
               </button>
             </div>
 
@@ -297,7 +297,7 @@ const Checkout = () => {
               <form onSubmit={handleApplyCoupon} style={{ display: 'flex', gap: '0.5rem' }}>
                 <input 
                   className="input-field" 
-                  placeholder="Discount code" 
+                  placeholder="ডিসকাউন্ট কোড" 
                   value={couponCode} 
                   onChange={e => setCouponCode(e.target.value)} 
                   style={{ background: '#fff', flex: 1, padding: '0.75rem' }} 
@@ -309,7 +309,7 @@ const Checkout = () => {
                   style={{ background: appliedDiscount !== null ? '#e5e7eb' : '#fff' }}
                   disabled={appliedDiscount !== null || !couponCode}
                 >
-                  Apply
+                  প্রয়োগ করুন
                 </button>
               </form>
               {couponError && <p style={{ color: '#ef4444', fontSize: '0.85rem', marginTop: '0.5rem' }}>{couponError}</p>}
@@ -319,29 +319,29 @@ const Checkout = () => {
             {/* Price Calculations */}
             <div style={{ paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'grid', gap: '0.75rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
-                <span>Subtotal</span>
+                <span>সাবটোটাল</span>
                 <span>{itemsPrice.toLocaleString()} BDT</span>
               </div>
               {totalBundleDiscount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16a34a' }}>
-                  <span>Bundle Discount</span>
+                  <span>বান্ডেল ডিসকাউন্ট</span>
                   <span>-{totalBundleDiscount.toLocaleString()} BDT</span>
                 </div>
               )}
               {appliedDiscount !== null && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16a34a' }}>
-                  <span>Discount ({appliedCoupon})</span>
+                  <span>ডিসকাউন্ট ({appliedCoupon})</span>
                   <span>-{discountAmount.toLocaleString()} BDT</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4b5563' }}>
-                <span>Shipping</span>
-                <span>{shippingCost > 0 ? `${shippingCost.toLocaleString()} BDT` : 'Free'}</span>
+                <span>ডেলিভারি চার্জ</span>
+                <span>{shippingCost > 0 ? `${shippingCost.toLocaleString()} BDT` : 'ফ্রি'}</span>
               </div>
             </div>
 
             <div style={{ paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 500, color: '#1f2937' }}>Total</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: 500, color: '#1f2937' }}>সর্বমোট</span>
               <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1f2937' }}>
                 <span style={{ fontSize: '1rem', fontWeight: 400, color: '#6b7280', marginRight: '0.5rem' }}>BDT</span>
                 {totalPrice.toLocaleString()} BDT

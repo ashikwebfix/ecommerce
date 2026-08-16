@@ -10,7 +10,7 @@ const About = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
         <Link to="/" style={{ transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color='var(--accent-primary)'} onMouseOut={e => e.currentTarget.style.color='var(--text-secondary)'}>Home</Link>
         <ChevronRight size={14} />
-        <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>About Us</span>
+        <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>আমাদের সম্পর্কে</span>
       </div>
 
       {/* Hero Section */}
@@ -21,9 +21,9 @@ const About = () => {
           style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, objectFit: 'cover' }} 
         />
         <div style={{ position: 'relative', height: '100%', minHeight: '350px', background: 'linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0.4))', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '4rem' }}>
-          <h1 style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', margin: '0 0 1rem 0' }}>Our Story</h1>
+          <h1 style={{ color: 'white', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '800', margin: '0 0 1rem 0' }}>আমাদের গল্প</h1>
           <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1.2rem', maxWidth: '600px', lineHeight: '1.6' }}>
-            Our mission is to bring high-quality, trending household products to every home in Bangladesh, ensuring reliability, affordability, and excellent customer service.
+            আমাদের লক্ষ্য হলো বাংলাদেশের প্রতিটি ঘরে সেরা মানের ও ট্রেন্ডিং সব পণ্য পৌঁছে দেওয়া। আমরা নিশ্চিত করি সেরা মান, সাশ্রয়ী মূল্য এবং চমৎকার কাস্টমার সার্ভিস।
           </p>
         </div>
       </div>
@@ -31,30 +31,30 @@ const About = () => {
       {/* Main Content */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', marginBottom: '5rem' }}>
         <div>
-          <h2 className="heading-lg" style={{ marginBottom: '1.5rem' }}>Who We Are</h2>
+          <h2 className="heading-lg" style={{ marginBottom: '1.5rem' }}>আমরা কারা</h2>
           <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.05rem', marginBottom: '1.5rem' }}>
-            kinaboo.com was founded with a clear vision: to become the most trusted and customer-centric e-commerce platform in Bangladesh, offering top trending household products at unbeatable prices.
+            kinaboo.com প্রতিষ্ঠিত হয়েছে একটি স্পষ্ট লক্ষ্য নিয়ে: বাংলাদেশের সবচেয়ে বিশ্বস্ত এবং ক্রেতাবান্ধব ই-কমার্স প্ল্যাটফর্ম হওয়া, যেখানে পাওয়া যাবে ট্রেন্ডিং সব প্রোডাক্ট সবচেয়ে সাশ্রয়ী মূল্যে।
           </p>
           <p style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.05rem' }}>
-            We understand the local market and the needs of our customers. By sourcing directly from top manufacturers and eliminating middlemen, we bring you the best household items right to your doorstep in Mirpur, Dhaka, and all across the country.
+            আমরা ক্রেতাদের চাহিদা খুব ভালোভাবে বুঝি। তাই সেরা প্রস্তুতকারকদের থেকে সরাসরি সংগ্রহ করে আমরা মানসম্মত প্রোডাক্ট পৌঁছে দিচ্ছি সারা দেশে।
           </p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', textAlign: 'center' }}>
             <h3 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>10k+</h3>
-            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Happy Customers</p>
+            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>সন্তুষ্ট গ্রাহক</p>
           </div>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', textAlign: 'center' }}>
             <h3 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>5+</h3>
-            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Years in Business</p>
+            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>বছরের অভিজ্ঞতা</p>
           </div>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', textAlign: 'center' }}>
             <h3 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>100%</h3>
-            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Satisfaction Rate</p>
+            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>গ্রাহক সন্তুষ্টি</p>
           </div>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', textAlign: 'center' }}>
             <h3 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>24/7</h3>
-            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>Support Available</p>
+            <p style={{ color: 'var(--text-secondary)', fontWeight: '500' }}>সাপোর্ট সুবিধা</p>
           </div>
         </div>
       </div>
@@ -63,9 +63,9 @@ const About = () => {
       <div style={{ background: '#f8fafc', margin: '0 -2rem', padding: '5rem 2rem', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
         <div className="container" style={{ padding: 0 }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 className="heading-lg" style={{ marginBottom: '1rem' }}>Our Core Values</h2>
+            <h2 className="heading-lg" style={{ marginBottom: '1rem' }}>আমাদের মূল নীতি</h2>
             <p className="text-muted" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
-              We believe in building a brand that stands the test of time by staying true to our foundational principles.
+              আমাদের মূল নীতি ও আদর্শই আমাদের ব্রান্ডকে সামনের দিকে এগিয়ে নিয়ে যাচ্ছে।
             </p>
           </div>
           
@@ -74,32 +74,32 @@ const About = () => {
               <div style={{ width: '60px', height: '60px', background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                 <Shield size={28} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>Quality First</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>We never compromise on the quality of our materials or our manufacturing processes.</p>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>গুণগত মান সবার আগে</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>আমরা পণ্যের গুণগত মানের সাথে কখনোই আপোষ করি না।</p>
             </div>
             
             <div className="glass" style={{ padding: '2.5rem', borderRadius: '16px', textAlign: 'center', transition: 'transform 0.3s' }} onMouseOver={e => e.currentTarget.style.transform='translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform='none'}>
               <div style={{ width: '60px', height: '60px', background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                 <Truck size={28} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>Fast Delivery</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>We optimize our logistics to ensure your products reach you securely and on time.</p>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>দ্রুত ডেলিভারি</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>আপনার অর্ডারকৃত পণ্য দ্রুত ও নিরাপদে পৌঁছে দিতে আমরা বদ্ধপরিকর।</p>
             </div>
             
             <div className="glass" style={{ padding: '2.5rem', borderRadius: '16px', textAlign: 'center', transition: 'transform 0.3s' }} onMouseOver={e => e.currentTarget.style.transform='translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform='none'}>
               <div style={{ width: '60px', height: '60px', background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                 <Clock size={28} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>24/7 Support</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>Our dedicated team is always available to help you with any questions or concerns.</p>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>২৪/৭ সাপোর্ট</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>যেকোনো প্রয়োজনে আমাদের ডেডিকেটেড সাপোর্ট টিম সব সময় আপনার পাশে আছে।</p>
             </div>
 
             <div className="glass" style={{ padding: '2.5rem', borderRadius: '16px', textAlign: 'center', transition: 'transform 0.3s' }} onMouseOver={e => e.currentTarget.style.transform='translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform='none'}>
               <div style={{ width: '60px', height: '60px', background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                 <Award size={28} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>Innovation</h3>
-              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>We continuously seek new ways to improve our products and customer experience.</p>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--text-primary)' }}>নতুনত্ব</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.6' }}>আমরা প্রতিনিয়ত আমাদের প্রোডাক্ট ও কাস্টমার সার্ভিস উন্নত করার নতুন উপায় খুঁজি।</p>
             </div>
           </div>
         </div>
