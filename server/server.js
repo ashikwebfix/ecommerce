@@ -17,7 +17,7 @@ const abandonedCartRoutes = require('./routes/abandonedCartRoutes');
 
 const { migrateProductSlugs } = require('./controllers/productController');
 
-dotenv.config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Connect to database and run migrations
 connectDB().then(() => {
