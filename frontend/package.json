@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "prestart": "fuser -k 6711/tcp || true",
-    "start": "PORT=6711 vite preview",
+    "start": "vite preview --port 6711 --host 0.0.0.0",
     "lint": "oxlint",
     "preview": "vite preview"
   },
