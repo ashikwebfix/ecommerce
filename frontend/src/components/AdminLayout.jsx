@@ -11,9 +11,12 @@ const AdminLayout = () => {
     navigate('/login');
   };
 
+  const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {};
+  const role = userInfo.role || (userInfo.isAdmin ? 'admin' : 'customer');
+
   const [openMenus, setOpenMenus] = React.useState({ Products: true, Settings: true });
 
-  const navItems = [
+  let navItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
     { name: 'Orders', path: '/admin/orders', icon: <ShoppingCart size={20} /> },
     { 
@@ -42,6 +45,14 @@ const AdminLayout = () => {
     },
     { name: 'Fraud Protection', path: '/admin/fraud-protection', icon: <Shield size={20} /> },
   ];
+
+  if (role === 'manager') {
+    navItems = navItems.filter(item => ['Dashboard', 'Orders', 'Products', 'Customers'].includes(item.name));
+  }
+
+  if (role === 'superadmin' || role === 'admin') {
+    navItems.splice(navItems.length - 1, 0, { name: 'Staff & Roles', path: '/admin/users', icon: <Users size={20} /> });
+  }
 
   const toggleMenu = (name) => {
     setOpenMenus(prev => ({ ...prev, [name]: !prev[name] }));

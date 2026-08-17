@@ -36,6 +36,7 @@ import AdminFraudProtection from './pages/admin/AdminFraudProtection';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './components/AdminLayout';
 import AdminAbandonedCarts from './pages/admin/AdminAbandonedCarts';
+import AdminUsers from './pages/admin/AdminUsers';
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
           <Route path="bundles/new" element={<AdminBundleForm />} />
           <Route path="bundles/edit/:id" element={<AdminBundleForm />} />
           <Route path="fraud-protection" element={<AdminFraudProtection />} />
+          <Route path="users" element={<AdminUsers />} />
         </Route>
       </Routes>
       <MobileBottomNav />

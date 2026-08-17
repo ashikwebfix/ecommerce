@@ -24,6 +24,11 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'customer', // 'superadmin', 'admin', 'manager', 'customer'
+  },
   phone: {
     type: DataTypes.STRING,
     allowNull: true,
