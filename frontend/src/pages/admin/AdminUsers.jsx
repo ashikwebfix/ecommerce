@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { UserPlus, Edit, Trash2, ShieldAlert } from 'lucide-react';
 
@@ -19,15 +18,15 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
         headers: { Authorization: `Bearer ${userInfo.token}` }
       });
-      // Filter out non-staff if we only want to manage staff, or show everyone.
-      // We will show everyone but highlight roles.
-      setUsers(res.data);
+      if (!res.ok) throw new Error('Failed to fetch users');
+      const data = await res.json();
+      setUsers(data);
       setLoading(false);
     } catch (error) {
-      toast.error('Failed to fetch users');
+      toast.error(error.message);
       setLoading(false);
     }
   };
@@ -46,21 +45,29 @@ const AdminUsers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (isEdit) {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${formData.id}`, formData, {
-          headers: { Authorization: `Bearer ${userInfo.token}` }
-        });
-        toast.success('User role updated successfully');
-      } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/users/admin`, formData, {
-          headers: { Authorization: `Bearer ${userInfo.token}` }
-        });
-        toast.success('User created successfully');
-      }
+      const url = isEdit 
+        ? `${import.meta.env.VITE_API_URL}/api/users/${formData.id}`
+        : `${import.meta.env.VITE_API_URL}/api/users/admin`;
+      
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}` 
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Error saving user');
+
+      toast.success(isEdit ? 'User role updated successfully' : 'User created successfully');
       setIsModalOpen(false);
       fetchUsers();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error saving user');
+      toast.error(error.message);
     }
   };
 
@@ -70,13 +77,18 @@ const AdminUsers = () => {
     
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
+          method: 'DELETE',
           headers: { Authorization: `Bearer ${userInfo.token}` }
         });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Error deleting user');
+
         toast.success('User deleted');
         fetchUsers();
       } catch (error) {
-        toast.error(error.response?.data?.message || 'Error deleting user');
+        toast.error(error.message);
       }
     }
   };
