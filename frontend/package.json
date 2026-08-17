@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "vite preview",
+    "prestart": "fuser -k 6711/tcp || true",
+    "start": "PORT=6711 vite preview",
     "lint": "oxlint",
     "preview": "vite preview"
   },
