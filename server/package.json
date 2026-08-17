@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prestart": "fuser -k 6710/tcp || true",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
