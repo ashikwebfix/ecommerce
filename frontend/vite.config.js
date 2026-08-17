@@ -7,5 +7,8 @@ export default defineConfig({
   server: {
     port: 6711,
     strictPort: true
+  },
+  preview: {
+    allowedHosts: true
   }
 })
