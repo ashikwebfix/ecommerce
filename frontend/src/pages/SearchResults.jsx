@@ -26,7 +26,7 @@ const SearchResults = () => {
     const fetchResults = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5005/api/products?search=${encodeURIComponent(query)}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products?search=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data = await res.json();
           setProducts(data);

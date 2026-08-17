@@ -31,7 +31,7 @@ const Checkout = () => {
 
     const fetchMethods = async () => {
       try {
-        const res = await fetch('http://localhost:5005/api/settings/delivery_methods');
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/delivery_methods');
         const data = await res.json();
         setDeliveryMethods(data);
         if (data && data.length > 0) {
@@ -54,7 +54,7 @@ const Checkout = () => {
     if (cartItems.length > 0 && phone && bdPhoneRegex.test(phone)) {
       const timer = setTimeout(async () => {
         try {
-          await fetch('http://localhost:5005/api/abandoned-carts/track', {
+          await fetch(import.meta.env.VITE_API_URL + '/api/abandoned-carts/track', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -94,7 +94,7 @@ const Checkout = () => {
     setCouponSuccess('');
     
     try {
-      const res = await fetch('http://localhost:5005/api/coupons/validate', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -161,7 +161,7 @@ const Checkout = () => {
         headers['Authorization'] = `Bearer ${userInfo.token}`;
       }
 
-      const res = await fetch('http://localhost:5005/api/orders', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
         method: 'POST',
         headers,
         body: JSON.stringify(orderData)
@@ -214,7 +214,7 @@ const Checkout = () => {
                   onChange={e => setPhone(e.target.value)} 
                   onBlur={() => {
                     if (phone && /^(?:\+88|88)?01[3-9]\d{8}$/.test(phone)) {
-                      fetch('http://localhost:5005/api/abandoned-carts/track', {
+                      fetch(import.meta.env.VITE_API_URL + '/api/abandoned-carts/track', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

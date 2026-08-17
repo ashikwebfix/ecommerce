@@ -34,7 +34,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/users/profile', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/users/profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -51,7 +51,7 @@ const Profile = () => {
 
   const fetchMyOrders = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/orders/myorders', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/orders/myorders', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -68,7 +68,7 @@ const Profile = () => {
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5005/api/users/profile', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/users/profile', {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const Profile = () => {
     setTrackingLoading(true);
     setTrackingData(null);
     try {
-      const res = await fetch(`http://localhost:5005/api/pathao/tracking/${consignmentId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pathao/tracking/${consignmentId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {

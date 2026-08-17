@@ -29,37 +29,37 @@ const AdminSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/settings/delivery_methods', { headers: { Authorization: `Bearer ${token}` }});
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/delivery_methods', { headers: { Authorization: `Bearer ${token}` }});
       const data = await res.json();
       setDeliveryMethods(data);
 
-      const menuRes = await fetch('http://localhost:5005/api/settings/header_menu', { headers: { Authorization: `Bearer ${token}` }});
+      const menuRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/header_menu', { headers: { Authorization: `Bearer ${token}` }});
       const menuData = await menuRes.json();
       setHeaderMenu(menuData);
 
-      const trackingRes = await fetch('http://localhost:5005/api/settings/tracking_settings', { headers: { Authorization: `Bearer ${token}` }});
+      const trackingRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/tracking_settings', { headers: { Authorization: `Bearer ${token}` }});
       if (trackingRes.ok) {
         const trackingData = await trackingRes.json();
         if (trackingData) setTrackingSettings(trackingData);
       }
 
-      const storefrontRes = await fetch('http://localhost:5005/api/settings/storefront_ui', { headers: { Authorization: `Bearer ${token}` }});
+      const storefrontRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/storefront_ui', { headers: { Authorization: `Bearer ${token}` }});
       if (storefrontRes.ok) {
         const storefrontData = await storefrontRes.json();
         if (storefrontData) setStorefrontUI(storefrontData);
       }
 
-      const pathaoRes = await fetch('http://localhost:5005/api/settings/pathao_settings', { headers: { Authorization: `Bearer ${token}` }});
+      const pathaoRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/pathao_settings', { headers: { Authorization: `Bearer ${token}` }});
       if (pathaoRes.ok) {
         const pathaoData = await pathaoRes.json();
         if (pathaoData) setPathaoSettings(pathaoData);
       }
 
-      const prodRes = await fetch('http://localhost:5005/api/products');
+      const prodRes = await fetch(import.meta.env.VITE_API_URL + '/api/products');
       const prodData = await prodRes.json();
       setAllProducts(Array.isArray(prodData) ? prodData : []);
 
-      const catRes = await fetch('http://localhost:5005/api/categories');
+      const catRes = await fetch(import.meta.env.VITE_API_URL + '/api/categories');
       const catData = await catRes.json();
       setAllCategories(Array.isArray(catData) ? catData : []);
     } catch (error) {
@@ -98,27 +98,27 @@ const AdminSettings = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res1 = await fetch('http://localhost:5005/api/settings/delivery_methods', {
+      const res1 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/delivery_methods', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: deliveryMethods })
       });
-      const res2 = await fetch('http://localhost:5005/api/settings/header_menu', {
+      const res2 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/header_menu', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: headerMenu })
       });
-      const res3 = await fetch('http://localhost:5005/api/settings/tracking_settings', {
+      const res3 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/tracking_settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: trackingSettings })
       });
-      const res4 = await fetch('http://localhost:5005/api/settings/storefront_ui', {
+      const res4 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/storefront_ui', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: storefrontUI })
       });
-      const res5 = await fetch('http://localhost:5005/api/settings/pathao_settings', {
+      const res5 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/pathao_settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: pathaoSettings })

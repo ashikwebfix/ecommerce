@@ -1,10 +1,16 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize('ecommerce', 'root', 'mysql', {
-  host: '127.0.0.1',
-  dialect: 'mysql',
-  logging: false, // Set to console.log to see SQL queries
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'ecommerce', 
+  process.env.DB_USER || 'root', 
+  process.env.DB_PASS || 'mysql', 
+  {
+    host: process.env.DB_HOST || '127.0.0.1',
+    dialect: 'mysql',
+    logging: false, // Set to console.log to see SQL queries
+  }
+);
 
 const connectDB = async () => {
   try {

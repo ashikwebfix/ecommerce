@@ -55,7 +55,7 @@ const ProductDetails = () => {
     
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:5005/api/products/${slug}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${slug}`);
         if (!res.ok) {
           toast.error('Product not found');
           setLoading(false);
@@ -77,12 +77,12 @@ const ProductDetails = () => {
         }
 
         // Fetch related products (same category)
-        const allRes = await fetch(`http://localhost:5005/api/products`);
+        const allRes = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
         const allData = await allRes.json();
         setRelatedProducts(allData.filter(p => p.category === data.category && p.id !== data.id).slice(0, 4));
 
         // Fetch active bundles for this product
-        const bundleRes = await fetch(`http://localhost:5005/api/bundles/product/${data.id}`);
+        const bundleRes = await fetch(`${import.meta.env.VITE_API_URL}/api/bundles/product/${data.id}`);
         if (bundleRes.ok) {
           const bundleData = await bundleRes.json();
           setBundles(bundleData);
@@ -99,7 +99,7 @@ const ProductDetails = () => {
         }
 
         // Fetch delivery methods
-        const dmRes = await fetch('http://localhost:5005/api/settings/delivery_methods');
+        const dmRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/delivery_methods');
         const dmData = await dmRes.json();
         setDeliveryMethods(dmData);
         if (dmData && dmData.length > 0) setSelectedMethodId(dmData[0].id);

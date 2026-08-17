@@ -25,7 +25,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
     if (qbPhone && bdPhoneRegex.test(qbPhone)) {
       const timer = setTimeout(async () => {
         try {
-          await fetch('http://localhost:5005/api/abandoned-carts/track', {
+          await fetch(import.meta.env.VITE_API_URL + '/api/abandoned-carts/track', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -51,7 +51,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
   useEffect(() => {
     const fetchDeliveryMethods = async () => {
       try {
-        const dmRes = await fetch('http://localhost:5005/api/settings/delivery_methods');
+        const dmRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/delivery_methods');
         if (dmRes.ok) {
           const dmData = await dmRes.json();
           setDeliveryMethods(dmData);
@@ -70,7 +70,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
     setCouponError('');
     try {
       const subtotal = (product.sellPrice || product.price) * qty;
-      const res = await fetch('http://localhost:5005/api/coupons/validate', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/coupons/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -139,7 +139,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
         headers['Authorization'] = `Bearer ${userInfo.token}`;
       }
 
-      const res = await fetch('http://localhost:5005/api/orders', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/orders', {
         method: 'POST',
         headers,
         body: JSON.stringify(orderData)
@@ -216,7 +216,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
               onChange={e => setQbPhone(e.target.value)} 
               onBlur={() => {
                 if (qbPhone && /^(?:\+88|88)?01[3-9]\d{8}$/.test(qbPhone)) {
-                  fetch('http://localhost:5005/api/abandoned-carts/track', {
+                  fetch(import.meta.env.VITE_API_URL + '/api/abandoned-carts/track', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

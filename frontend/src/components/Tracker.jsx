@@ -24,7 +24,7 @@ const Tracker = () => {
       if (sessionInitialized.current) return;
       sessionInitialized.current = true;
       try {
-        await fetch('http://localhost:5005/api/analytics/init', {
+        await fetch(import.meta.env.VITE_API_URL + '/api/analytics/init', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -58,7 +58,7 @@ const Tracker = () => {
         const payload = [...clickQueue.current];
         clickQueue.current = [];
         
-        fetch('http://localhost:5005/api/analytics/click', {
+        fetch(import.meta.env.VITE_API_URL + '/api/analytics/click', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -80,7 +80,7 @@ const Tracker = () => {
   useEffect(() => {
     if (location.pathname.startsWith('/admin')) return;
 
-    fetch('http://localhost:5005/api/analytics/pageview', {
+    fetch(import.meta.env.VITE_API_URL + '/api/analytics/pageview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

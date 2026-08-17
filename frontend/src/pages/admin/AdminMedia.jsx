@@ -18,7 +18,7 @@ const AdminMedia = () => {
 
   const fetchMedia = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/upload', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/upload', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -39,7 +39,7 @@ const AdminMedia = () => {
 
     setUploading(true);
     try {
-      await fetch('http://localhost:5005/api/upload', {
+      await fetch(import.meta.env.VITE_API_URL + '/api/upload', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData
@@ -56,7 +56,7 @@ const AdminMedia = () => {
   const handleDelete = async (filename) => {
     if (window.confirm('Are you sure you want to delete this image? It will be removed from any product using it.')) {
       try {
-        await fetch(`http://localhost:5005/api/upload/${filename}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/upload/${filename}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

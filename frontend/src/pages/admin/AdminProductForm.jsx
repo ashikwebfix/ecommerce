@@ -46,7 +46,7 @@ const AdminProductForm = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/categories');
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/categories');
       const data = await res.json();
       setFetchedCategories(data);
     } catch (error) {
@@ -56,7 +56,7 @@ const AdminProductForm = () => {
 
   const fetchProduct = async () => {
     try {
-      const res = await fetch(`http://localhost:5005/api/products/${id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`);
       const product = await res.json();
       
       setName(product.name);
@@ -93,7 +93,7 @@ const AdminProductForm = () => {
 
     try {
       const method = isEditing ? 'PUT' : 'POST';
-      const url = isEditing ? `http://localhost:5005/api/products/${id}` : `http://localhost:5005/api/products`;
+      const url = isEditing ? `${import.meta.env.VITE_API_URL}/api/products/${id}` : `${import.meta.env.VITE_API_URL}/api/products`;
       
       await fetch(url, {
         method,

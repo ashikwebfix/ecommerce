@@ -23,9 +23,9 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const [productsRes, usersRes, ordersRes] = await Promise.all([
-          fetch('http://localhost:5005/api/products'),
-          fetch('http://localhost:5005/api/users', { headers: { Authorization: `Bearer ${token}` } }),
-          fetch('http://localhost:5005/api/orders', { headers: { Authorization: `Bearer ${token}` } })
+          fetch(import.meta.env.VITE_API_URL + '/api/products'),
+          fetch(import.meta.env.VITE_API_URL + '/api/users', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(import.meta.env.VITE_API_URL + '/api/orders', { headers: { Authorization: `Bearer ${token}` } })
         ]);
         
         const products = await productsRes.json();

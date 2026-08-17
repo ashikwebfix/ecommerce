@@ -10,7 +10,7 @@ const TrackingInjector = () => {
     // Fetch tracking settings from backend
     const fetchTrackingSettings = async () => {
       try {
-        const res = await fetch('http://localhost:5005/api/settings/tracking_settings');
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/tracking_settings');
         if (res.ok) {
           const data = await res.json();
           setSettings(data);

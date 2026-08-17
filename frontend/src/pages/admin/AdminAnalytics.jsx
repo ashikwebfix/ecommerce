@@ -32,7 +32,7 @@ const AdminAnalytics = () => {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/analytics/dashboard', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/analytics/dashboard', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -46,7 +46,7 @@ const AdminAnalytics = () => {
 
   const loadHeatmap = async () => {
     try {
-      const res = await fetch(`http://localhost:5005/api/analytics/dashboard?heatmapUrl=${encodeURIComponent(heatmapUrl)}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/analytics/dashboard?heatmapUrl=${encodeURIComponent(heatmapUrl)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -145,7 +145,7 @@ const AdminAnalytics = () => {
           <div style={{ position: 'relative', height: '600px', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden', background: '#f8fafc' }}>
             {/* We render an iframe of the actual site to overlay the clicks onto */}
             <iframe 
-              src={`http://localhost:5173${heatmapUrl}`} 
+              src={`${window.location.origin}${heatmapUrl}`} 
               title="Heatmap Target"
               style={{ width: '100%', height: '100%', border: 'none', opacity: 0.5, pointerEvents: 'none' }}
             />

@@ -25,8 +25,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [prodRes, configRes] = await Promise.all([
-          fetch('http://localhost:5005/api/products'),
-          fetch('http://localhost:5005/api/settings/storefront_ui')
+          fetch(import.meta.env.VITE_API_URL + '/api/products'),
+          fetch(import.meta.env.VITE_API_URL + '/api/settings/storefront_ui')
         ]);
         const prodData = await prodRes.json();
         const configData = await configRes.json();

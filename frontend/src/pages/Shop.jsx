@@ -37,7 +37,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5005/api/products');
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/products');
         if (res.ok) {
           const data = await res.json();
           setProducts(data);

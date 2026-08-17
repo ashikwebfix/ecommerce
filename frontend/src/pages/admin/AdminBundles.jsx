@@ -13,7 +13,7 @@ const AdminBundles = () => {
 
   const fetchBundles = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/bundles', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/bundles', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -30,7 +30,7 @@ const AdminBundles = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this bundle?')) {
       try {
-        const res = await fetch(`http://localhost:5005/api/bundles/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bundles/${id}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` }
         });

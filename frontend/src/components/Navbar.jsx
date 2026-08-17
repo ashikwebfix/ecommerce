@@ -22,7 +22,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch('http://localhost:5005/api/settings/header_menu');
+        const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/header_menu');
         if (res.ok) {
           const data = await res.json();
           setMenuItems(data);
@@ -39,7 +39,7 @@ const Navbar = () => {
       setIsSearching(true);
       const delayDebounceFn = setTimeout(async () => {
         try {
-          const res = await fetch(`http://localhost:5005/api/products?search=${encodeURIComponent(searchQuery)}`);
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products?search=${encodeURIComponent(searchQuery)}`);
           if (res.ok) {
             const data = await res.json();
             setLiveResults(data.slice(0, 5));

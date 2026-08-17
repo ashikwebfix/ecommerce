@@ -37,7 +37,7 @@ const AdminCoupons = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/products');
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/products');
       const data = await res.json();
       if (res.ok) setAllProducts(data.products || data || []);
     } catch (e) {}
@@ -45,7 +45,7 @@ const AdminCoupons = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/categories');
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/categories');
       const data = await res.json();
       if (res.ok) setAllCategories(data);
     } catch (e) {}
@@ -53,7 +53,7 @@ const AdminCoupons = () => {
 
   const fetchCoupons = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/coupons', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/coupons', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -78,7 +78,7 @@ const AdminCoupons = () => {
     if (!newCode || !discountValue) return;
 
     try {
-      const res = await fetch('http://localhost:5005/api/coupons', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/coupons', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ const AdminCoupons = () => {
 
   const handleToggle = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5005/api/coupons/${id}/toggle`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/coupons/${id}/toggle`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -133,7 +133,7 @@ const AdminCoupons = () => {
   const handleDelete = async (id) => {
     if(!window.confirm('Delete this coupon?')) return;
     try {
-      const res = await fetch(`http://localhost:5005/api/coupons/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/coupons/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

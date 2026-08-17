@@ -14,7 +14,7 @@ const AdminAbandonedCarts = () => {
 
   const fetchCarts = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/abandoned-carts', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/abandoned-carts', {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`
         }

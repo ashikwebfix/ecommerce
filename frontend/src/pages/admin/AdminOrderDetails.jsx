@@ -37,7 +37,7 @@ const AdminOrderDetails = () => {
 
   const fetchOrder = async () => {
     try {
-      const res = await fetch(`http://localhost:5005/api/orders`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -61,7 +61,7 @@ const AdminOrderDetails = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:5005/api/orders/${id}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}/status`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const AdminOrderDetails = () => {
     setShowPathaoModal(true);
     setPathaoLoading(true);
     try {
-      const res = await fetch('http://localhost:5005/api/pathao/cities', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/pathao/cities', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -124,7 +124,7 @@ const AdminOrderDetails = () => {
       setAreas([]);
       setSelectedZone('');
       setSelectedArea('');
-      fetch(`http://localhost:5005/api/pathao/zones/${selectedCity}`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/pathao/zones/${selectedCity}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => res.json())
@@ -137,7 +137,7 @@ const AdminOrderDetails = () => {
     if (selectedZone) {
       setAreas([]);
       setSelectedArea('');
-      fetch(`http://localhost:5005/api/pathao/areas/${selectedZone}`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/pathao/areas/${selectedZone}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => res.json())
@@ -152,7 +152,7 @@ const AdminOrderDetails = () => {
     }
     setPathaoLoading(true);
     try {
-      const res = await fetch(`http://localhost:5005/api/pathao/create-order/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pathao/create-order/${id}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

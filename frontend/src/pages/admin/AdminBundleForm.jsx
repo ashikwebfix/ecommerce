@@ -34,7 +34,7 @@ const AdminBundleForm = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/products');
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/products');
       const data = await res.json();
       setAllProducts(data);
     } catch (error) {
@@ -44,7 +44,7 @@ const AdminBundleForm = () => {
 
   const fetchBundle = async () => {
     try {
-      const res = await fetch(`http://localhost:5005/api/bundles/${id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bundles/${id}`);
       if (res.ok) {
         const data = await res.json();
         setFormData({
@@ -66,7 +66,7 @@ const AdminBundleForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = isEdit ? `http://localhost:5005/api/bundles/${id}` : 'http://localhost:5005/api/bundles';
+      const url = isEdit ? `${import.meta.env.VITE_API_URL}/api/bundles/${id}` : import.meta.env.VITE_API_URL + '/api/bundles';
       const method = isEdit ? 'PUT' : 'POST';
       
       const res = await fetch(url, {

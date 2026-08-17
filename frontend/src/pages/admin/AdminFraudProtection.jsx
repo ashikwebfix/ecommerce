@@ -20,7 +20,7 @@ const AdminFraudProtection = () => {
 
   const fetchSettings = async () => {
     try {
-      const res = await fetch('http://localhost:5005/api/settings/fraud_protection', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/fraud_protection', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -41,7 +41,7 @@ const AdminFraudProtection = () => {
     setSaving(true);
 
     try {
-      const res = await fetch('http://localhost:5005/api/settings/fraud_protection', {
+      const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/fraud_protection', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
