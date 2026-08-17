@@ -206,7 +206,28 @@ const Checkout = () => {
               <h2 style={{ fontSize: '1.25rem', fontWeight: 500, marginBottom: '1rem', color: '#1f2937' }}>যোগাযোগের তথ্য</h2>
               <div style={{ display: 'grid', gap: '1rem' }}>
                 <input required className="input-field" placeholder="সম্পূর্ণ নাম" value={name} onChange={e => setName(e.target.value)} style={{ padding: '0.875rem' }} />
-                <input required className="input-field" placeholder="ফোন নাম্বার" value={phone} onChange={e => setPhone(e.target.value)} style={{ padding: '0.875rem' }} />
+                <input 
+                  required 
+                  className="input-field" 
+                  placeholder="ফোন নাম্বার" 
+                  value={phone} 
+                  onChange={e => setPhone(e.target.value)} 
+                  onBlur={() => {
+                    if (phone && /^(?:\+88|88)?01[3-9]\d{8}$/.test(phone)) {
+                      fetch('http://localhost:5005/api/abandoned-carts/track', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          phone,
+                          name,
+                          cartData: cartItems,
+                          totalValue: cartItems.reduce((acc, item) => acc + (item.sellPrice || item.price) * item.qty, 0)
+                        })
+                      }).catch(() => {});
+                    }
+                  }}
+                  style={{ padding: '0.875rem' }} 
+                />
               </div>
             </section>
 

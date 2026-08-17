@@ -1,4 +1,5 @@
 const AbandonedCart = require('../models/AbandonedCart');
+const { Op } = require('sequelize');
 
 // Track or update abandoned cart
 const trackCart = async (req, res) => {

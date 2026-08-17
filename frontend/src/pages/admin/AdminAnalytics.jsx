@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { Users, MousePointer2, Activity, Map, Eye } from 'lucide-react';
+import { Users, MousePointer2, Activity, Map, Eye, TrendingUp, ShoppingBag, MapPin, Package } from 'lucide-react';
 
 // Fix for default leaflet icons not showing in React Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -187,6 +187,94 @@ const AdminAnalytics = () => {
           <div style={{ textAlign: 'right', marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             Showing {clicks.length} data points.
           </div>
+        </div>
+
+        {/* New Analytics Reports */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+          
+          {/* Max Visited Products */}
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Eye size={18} /> Top Visited Products
+            </h2>
+            {stats.maxVisitedProducts && stats.maxVisitedProducts.length > 0 ? (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {stats.maxVisitedProducts.map((item, i) => (
+                  <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      {item.product.image && <img src={item.product.image} alt="" style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }} />}
+                      <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{item.product.name}</span>
+                    </div>
+                    <span style={{ background: 'var(--bg-secondary)', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 600 }}>{item.visitCount} visits</span>
+                  </li>
+                ))}
+              </ul>
+            ) : <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>No visit data available.</p>}
+          </div>
+
+          {/* Max Selling Products */}
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <ShoppingBag size={18} /> Top Selling Products
+            </h2>
+            {stats.maxSellingProducts && stats.maxSellingProducts.length > 0 ? (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {stats.maxSellingProducts.map((item, i) => (
+                  <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      {item.product?.image && <img src={item.product.image} alt="" style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }} />}
+                      <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{item.product?.name || 'Unknown'}</span>
+                    </div>
+                    <span style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#16a34a', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 600 }}>{item.totalSold} sold</span>
+                  </li>
+                ))}
+              </ul>
+            ) : <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>No sales data available.</p>}
+          </div>
+
+          {/* Visitors By Location */}
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <MapPin size={18} /> Visitors by Location
+            </h2>
+            {stats.visitorsByLocation && stats.visitorsByLocation.length > 0 ? (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {stats.visitorsByLocation.map((loc, i) => (
+                  <li key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{loc.city !== 'Unknown' ? `${loc.city}, ` : ''}{loc.country}</span>
+                    <span style={{ background: 'var(--bg-secondary)', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 600 }}>{loc.count}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>No location data available.</p>}
+          </div>
+
+          {/* Trending Daily */}
+          <div style={{ background: '#fff', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <TrendingUp size={18} /> Daily Trending (Pageviews)
+            </h2>
+            {stats.trendingData && stats.trendingData.length > 0 ? (
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.5rem', height: '150px', marginTop: '1rem' }}>
+                {stats.trendingData.map((d, i) => {
+                  const maxViews = Math.max(...stats.trendingData.map(t => t.views));
+                  const heightPercent = maxViews > 0 ? (d.views / maxViews) * 100 : 0;
+                  return (
+                    <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>{d.views}</div>
+                      <div style={{ width: '100%', height: '100%', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: `${heightPercent}%`, background: '#3b82f6', borderRadius: '4px' }} title={`${d.date}: ${d.views} views`}></div>
+                      </div>
+                      <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                        {new Date(d.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>No trending data available.</p>}
+          </div>
+
         </div>
 
       </div>

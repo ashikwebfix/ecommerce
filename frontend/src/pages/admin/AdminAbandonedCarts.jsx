@@ -110,16 +110,38 @@ const AdminAbandonedCarts = () => {
                     </div>
                   </td>
                   <td style={{ padding: '1rem' }}>
-                    <span style={{
-                      padding: '0.25rem 0.75rem',
-                      borderRadius: '9999px',
-                      fontSize: '0.75rem',
-                      fontWeight: '600',
-                      background: cart.status === 'recovered' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                      color: cart.status === 'recovered' ? '#16a34a' : '#dc2626'
-                    }}>
-                      {cart.status.toUpperCase()}
-                    </span>
+                    {(() => {
+                      let displayStatus = cart.status.toUpperCase();
+                      let bg = 'rgba(239, 68, 68, 0.1)';
+                      let color = '#dc2626';
+
+                      if (cart.status === 'recovered') {
+                        bg = 'rgba(34, 197, 94, 0.1)';
+                        color = '#16a34a';
+                      } else if (cart.status === 'abandoned') {
+                        const minsSinceUpdate = (Date.now() - new Date(cart.updatedAt).getTime()) / (1000 * 60);
+                        if (minsSinceUpdate < 20) {
+                          displayStatus = 'PENDING ABANDONED';
+                          bg = 'rgba(234, 179, 8, 0.1)';
+                          color = '#ca8a04';
+                        } else {
+                          displayStatus = 'FULLY ABANDONED';
+                        }
+                      }
+
+                      return (
+                        <span style={{
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '9999px',
+                          fontSize: '0.75rem',
+                          fontWeight: '600',
+                          background: bg,
+                          color: color
+                        }}>
+                          {displayStatus}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td style={{ padding: '1rem', textAlign: 'right' }}>
                     <a 

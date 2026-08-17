@@ -2,7 +2,11 @@ const axios = require('axios');
 const Visitor = require('../models/Visitor');
 const PageView = require('../models/PageView');
 const ClickEvent = require('../models/ClickEvent');
-const { Op } = require('sequelize');
+const Order = require('../models/Order');
+const OrderItem = require('../models/OrderItem');
+const Product = require('../models/Product');
+const { Op, fn, col, literal } = require('sequelize');
+const { sequelize } = require('../config/db');
 
 const initSession = async (req, res) => {
   try {
@@ -21,21 +25,20 @@ const initSession = async (req, res) => {
     if (!visitor) {
       let geo = { country: 'Unknown', city: 'Unknown', lat: 0, lon: 0 };
       
-      // Don't call IP API for localhost in dev to prevent errors, use dummy data
-      if (ipAddress !== '127.0.0.1') {
-        try {
-          const geoRes = await axios.get(`http://ip-api.com/json/${ipAddress}`);
-          if (geoRes.data.status === 'success') {
-            geo = {
-              country: geoRes.data.country,
-              city: geoRes.data.city,
-              lat: geoRes.data.lat,
-              lon: geoRes.data.lon
-            };
-          }
-        } catch (e) {
-          console.error("GeoIP Error:", e.message);
+      try {
+        // If localhost, don't send the IP, ip-api will use the server's public IP
+        const apiUrl = ipAddress === '127.0.0.1' ? 'http://ip-api.com/json/' : `http://ip-api.com/json/${ipAddress}`;
+        const geoRes = await axios.get(apiUrl);
+        if (geoRes.data.status === 'success') {
+          geo = {
+            country: geoRes.data.country,
+            city: geoRes.data.city,
+            lat: geoRes.data.lat,
+            lon: geoRes.data.lon
+          };
         }
+      } catch (e) {
+        console.error("GeoIP Error:", e.message);
       }
 
       visitor = await Visitor.create({
@@ -119,23 +122,99 @@ const getDashboardStats = async (req, res) => {
       where: { timestamp: { [Op.gte]: startOfDay } }
     });
 
-    // Clicks for heatmap (we only return recent clicks to prevent huge payloads)
-    // Client can pass a specific pageUrl to filter
+    // Clicks for heatmap
     const { heatmapUrl } = req.query;
     let clicks = [];
     if (heatmapUrl) {
       clicks = await ClickEvent.findAll({
         where: { pageUrl: heatmapUrl },
         order: [['timestamp', 'DESC']],
-        limit: 5000 // Limit to avoid crashing browser
+        limit: 5000 
       });
     }
+
+    // 1. Max visited product
+    const maxVisitedProductsData = await PageView.findAll({
+      where: {
+        pageUrl: { [Op.like]: '/product/%' }
+      },
+      attributes: [
+        'pageUrl',
+        [fn('COUNT', col('id')), 'visitCount']
+      ],
+      group: ['pageUrl'],
+      order: [[literal('visitCount'), 'DESC']],
+      limit: 10
+    });
+
+    // We need to fetch product details for these views
+    const maxVisitedProducts = [];
+    for (let mvp of maxVisitedProductsData) {
+      const slug = mvp.pageUrl.replace('/product/', '');
+      const product = await Product.findOne({ where: { slug }, attributes: ['name', 'image', 'price'] });
+      if (product) {
+        maxVisitedProducts.push({
+          product,
+          visitCount: mvp.dataValues.visitCount
+        });
+      }
+    }
+
+    // 2. Max selling product
+    const maxSellingProductsData = await OrderItem.findAll({
+      attributes: [
+        'productId',
+        [fn('SUM', col('qty')), 'totalSold']
+      ],
+      group: ['productId'],
+      order: [[literal('totalSold'), 'DESC']],
+      limit: 10,
+      include: [
+        { model: Product, as: 'product', attributes: ['name', 'image', 'price'] }
+      ]
+    });
+
+    // 3. Trending by the day (last 7 days pageviews)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    const recentPageViews = await PageView.findAll({
+      where: { timestamp: { [Op.gte]: sevenDaysAgo } },
+      attributes: ['timestamp']
+    });
+
+    const trendingByDay = {};
+    recentPageViews.forEach(pv => {
+      const dateStr = pv.timestamp.toISOString().split('T')[0];
+      trendingByDay[dateStr] = (trendingByDay[dateStr] || 0) + 1;
+    });
+    
+    // Sort trending by date
+    const trendingData = Object.keys(trendingByDay).sort().map(date => ({
+      date,
+      views: trendingByDay[date]
+    }));
+
+    // 4. Visitors by location
+    const visitorsByLocationData = await Visitor.findAll({
+      attributes: [
+        'country',
+        'city',
+        [fn('COUNT', col('id')), 'count']
+      ],
+      group: ['country', 'city'],
+      order: [[literal('count'), 'DESC']]
+    });
 
     res.json({
       activeVisitors,
       activeCount: activeVisitors.length,
       pageviews: pageviews.length,
-      clicks
+      clicks,
+      maxVisitedProducts,
+      maxSellingProducts: maxSellingProductsData,
+      trendingData,
+      visitorsByLocation: visitorsByLocationData
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

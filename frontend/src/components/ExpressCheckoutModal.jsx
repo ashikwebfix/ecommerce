@@ -19,6 +19,35 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
   const [couponError, setCouponError] = useState('');
   const [validatingCoupon, setValidatingCoupon] = useState(false);
 
+  const bdPhoneRegex = /^(?:\+88|88)?01[3-9]\d{8}$/;
+
+  useEffect(() => {
+    if (qbPhone && bdPhoneRegex.test(qbPhone)) {
+      const timer = setTimeout(async () => {
+        try {
+          await fetch('http://localhost:5005/api/abandoned-carts/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone: qbPhone,
+              name: qbName,
+              cartData: [{
+                id: product.id,
+                name: product.name,
+                qty,
+                price: product.sellPrice || product.price,
+                selectedVariations,
+                image: product.image || (product.images && product.images[0])
+              }],
+              totalValue: (product.sellPrice || product.price) * qty
+            })
+          });
+        } catch (err) {}
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [qbPhone, qbName, product, qty, selectedVariations]);
+
   useEffect(() => {
     const fetchDeliveryMethods = async () => {
       try {
@@ -178,7 +207,36 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.95rem' }}>Phone Number</label>
-            <input required type="tel" className="input-field" placeholder="e.g. 017XXXXXXXX" value={qbPhone} onChange={e => setQbPhone(e.target.value)} style={{ padding: '0.875rem' }} />
+            <input 
+              required 
+              type="tel" 
+              className="input-field" 
+              placeholder="e.g. 017XXXXXXXX" 
+              value={qbPhone} 
+              onChange={e => setQbPhone(e.target.value)} 
+              onBlur={() => {
+                if (qbPhone && /^(?:\+88|88)?01[3-9]\d{8}$/.test(qbPhone)) {
+                  fetch('http://localhost:5005/api/abandoned-carts/track', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      phone: qbPhone,
+                      name: qbName,
+                      cartData: [{
+                        id: product.id,
+                        name: product.name,
+                        qty,
+                        price: product.sellPrice || product.price,
+                        selectedVariations,
+                        image: product.image || (product.images && product.images[0])
+                      }],
+                      totalValue: (product.sellPrice || product.price) * qty
+                    })
+                  }).catch(() => {});
+                }
+              }}
+              style={{ padding: '0.875rem' }} 
+            />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.95rem' }}>Delivery Method</label>
