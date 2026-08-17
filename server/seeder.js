@@ -16,8 +16,8 @@ const importData = async () => {
     const password = await bcrypt.hash('password123', salt);
 
     await User.bulkCreate([
-      { name: 'Admin User', email: 'admin@site.com', password, isAdmin: true },
-      { name: 'John Doe', email: 'john@site.com', password, isAdmin: false }
+      { name: 'Admin User', email: 'admin@site.com', password, role: 'superadmin', isAdmin: true },
+      { name: 'John Doe', email: 'john@site.com', password, role: 'customer', isAdmin: false }
     ]);
     
     await Category.bulkCreate(categories);
