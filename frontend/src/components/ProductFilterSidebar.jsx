@@ -82,24 +82,13 @@ const ProductFilterSidebar = ({
         style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          gap: '0.5rem',
           marginBottom: '1.5rem',
           color: 'var(--text-primary)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Filter size={20} />
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>ফিল্টার</h2>
-        </div>
-        {setIsMobileOpen && (
-          <button 
-            className="close-filter-btn"
-            onClick={() => setIsMobileOpen(false)}
-            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.25rem' }}
-          >
-            <X size={24} />
-          </button>
-        )}
+        <Filter size={20} />
+        <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>ফিল্টার</h2>
       </div>
 
       <div className="filter-section">

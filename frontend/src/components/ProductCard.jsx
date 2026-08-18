@@ -116,12 +116,12 @@ const ProductCard = ({ product, showRating }) => {
 
       {/* Card Content */}
       <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1, background: '#fff' }}>
-        <p style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--accent-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 0.5rem 0' }}>
+        <p className="pc-category" style={{ fontSize: '0.7rem', fontWeight: '700', color: 'var(--accent-secondary)', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 0.5rem 0' }}>
           {product.category || 'Premium'}
         </p>
         
         <Link to={`/product/${product.slug || product.id}`} style={{ textDecoration: 'none', color: 'inherit', marginBottom: 'auto' }}>
-          <h3 style={{ fontSize: '1.05rem', fontWeight: '700', lineHeight: '1.4', margin: '0 0 1rem 0', color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '2.8em' }}>
+          <h3 className="pc-title" style={{ fontSize: '1.05rem', fontWeight: '700', lineHeight: '1.4', margin: '0 0 1rem 0', color: 'var(--text-primary)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '2.8em' }}>
             {product.name}
           </h3>
         </Link>
@@ -147,15 +147,15 @@ const ProductCard = ({ product, showRating }) => {
           <div style={{ display: 'flex', alignItems: 'end', gap: '0.5rem' }}>
             {product.sellPrice ? (
               <>
-                <span style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--accent-primary)', letterSpacing: '-0.5px' }}>
+                <span className="pc-price" style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--accent-primary)', letterSpacing: '-0.5px' }}>
                   {Number(product.sellPrice).toFixed(2)} BDT
                 </span>
-                <span style={{ fontSize: '0.85rem', textDecoration: 'line-through', color: 'var(--text-secondary)', marginBottom: '0.15rem' }}>
+                <span className="pc-old-price" style={{ fontSize: '0.85rem', textDecoration: 'line-through', color: 'var(--text-secondary)', marginBottom: '0.15rem' }}>
                   {Number(product.price).toFixed(2)} BDT
                 </span>
               </>
             ) : (
-              <span style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
+              <span className="pc-price" style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>
                 {Number(product.price).toFixed(2)} BDT
               </span>
             )}
@@ -185,6 +185,7 @@ const ProductCard = ({ product, showRating }) => {
         </div>
 
         <button 
+          className="pc-btn"
           style={{ 
             width: '100%',
             background: (product.stock <= 0 && !product.allowSellWithoutStock) ? '#f3f4f6' : (isHovered ? 'var(--accent-secondary)' : 'var(--bg-secondary)'), 

@@ -148,7 +148,7 @@ a {
 /* Micro-animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: none; }
 }
 
 .animate-fade-in {
@@ -395,59 +395,84 @@ a {
   .shop-layout { flex-direction: column; }
   .shop-grid { grid-template-columns: repeat(3, 1fr); }
   
+  .mobile-sticky-filter {
+    position: sticky !important;
+    top: 90px !important;
+    z-index: 9999 !important;
+    height: 0;
+    width: 0;
+    overflow: visible;
+  }
+
   .shop-sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    width: 280px;
-    height: 100vh;
-    z-index: 1000;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    border-radius: 0;
-    border: none;
-    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+    position: absolute !important;
+    top: 0 !important;
+    left: -320px !important;
+    width: 280px !important;
+    max-width: 85vw !important;
+    height: calc(100vh - 100px) !important;
+    max-height: 85vh !important;
+    z-index: 10 !important;
+    overflow-y: auto !important;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 16px 16px 0 !important;
+    border: none !important;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.15) !important;
+    background: var(--card-bg) !important;
   }
-  .shop-sidebar.open {
+
+  .mobile-sticky-filter.open .shop-sidebar {
+    left: 0 !important;
+  }
+
+  .mobile-filter-btn-container {
+    position: absolute;
+    top: 10px;
     left: 0;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 11 !important;
   }
+
+  .mobile-sticky-filter.open .mobile-filter-btn-container {
+    left: 280px;
+  }
+
   .mobile-filter-btn {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    padding: 1rem 0.5rem;
-    border-radius: 0 8px 8px 0;
-    z-index: 99;
-    cursor: pointer;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: var(--accent-primary) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.75rem !important;
+    border-radius: 0 12px 12px 0 !important;
+    cursor: pointer !important;
+    box-shadow: 4px 4px 15px rgba(0,0,0,0.15) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
   }
   .filter-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.5);
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0,0,0,0.6) !important;
+    z-index: -1 !important; /* Drops behind the button and sidebar within the wrapper's stacking context */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: all 0.3s ease !important;
   }
-  .filter-overlay.open {
-    opacity: 1;
-    visibility: visible;
+  .mobile-sticky-filter.open .filter-overlay {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
 }
 
 @media (min-width: 1025px) {
-  .mobile-filter-btn { display: none; }
+  .mobile-sticky-filter { display: contents; }
+  .mobile-filter-btn-container { display: none !important; }
   .filter-overlay { display: none; }
   .close-filter-btn { display: none; }
 }
@@ -744,5 +769,44 @@ a {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+  }
+}
+
+/* Mobile Global Overrides */
+@media (max-width: 640px) {
+  /* Product Grid Gaps */
+  .shop-grid, .featured-products-grid, .profile-favorites-grid, .grid-cols-auto {
+    gap: 10px !important;
+  }
+  
+  /* Container Padding */
+  .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* ProductCard Typography scaling for mobile */
+  .pc-title {
+    font-size: 1rem !important;
+  }
+  .pc-price {
+    font-size: 1rem !important;
+  }
+  .pc-category {
+    font-size: 0.6rem !important;
+  }
+  .pc-old-price {
+    font-size: 0.75rem !important;
+  }
+  .pc-btn {
+    font-size: 0.75rem !important;
+    height: 38px !important;
+  }
+
+  /* Footer Quick Links & Customer Service mobile layout */
+  .footer-links-wrapper {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 }

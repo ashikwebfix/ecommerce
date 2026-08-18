@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import ProductFilterSidebar from '../components/ProductFilterSidebar';
-import { ChevronRight, Filter, ChevronLeft, Loader } from 'lucide-react';
+import { ChevronRight, Filter, ChevronLeft, Loader, X } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 
 const Shop = () => {
@@ -125,8 +125,9 @@ const Shop = () => {
   };
 
   return (
-    <div className="container animate-fade-in" style={{ padding: '2rem 2rem 5rem' }}>
-      <Helmet>
+    <>
+      <div className="container" style={{ padding: '2rem 2rem 5rem' }}>
+        <Helmet>
         <title>Shop All Products | kinaboo.com</title>
         <meta name="description" content="Browse our complete collection of products. Filter by category, price, and tags to find exactly what you need." />
       </Helmet>
@@ -151,39 +152,44 @@ const Shop = () => {
         </div>
       </div>
 
-      {/* Mobile Filter Toggle Button */}
-      <button 
-        className="mobile-filter-btn" 
-        onClick={() => setIsMobileFilterOpen(true)}
-      >
-        <Filter size={24} />
-      </button>
-
-      {/* Overlay for Mobile Sidebar */}
-      <div 
-        className={`filter-overlay ${isMobileFilterOpen ? 'open' : ''}`} 
-        onClick={() => setIsMobileFilterOpen(false)}
-      ></div>
-
-      <div className="shop-layout">
+      <div className="shop-layout" style={{ position: 'relative' }}>
         
-        {/* Sidebar Filters */}
-        <ProductFilterSidebar
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-          maxPrice={maxPrice}
-          setMaxPrice={setMaxPrice}
-          inStockOnly={inStockOnly}
-          setInStockOnly={setInStockOnly}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          setCurrentPage={setCurrentPage}
-          showSearch={true}
-          isMobileOpen={isMobileFilterOpen}
-          setIsMobileOpen={setIsMobileFilterOpen}
-        />
+        {/* Mobile Sticky Sidebar Wrapper */}
+        <div className={`mobile-sticky-filter ${isMobileFilterOpen ? 'open' : ''}`}>
+          
+          {/* Moved overlay inside the sticky wrapper so it shares the exact same stacking context, guaranteed to sit behind the filter but cover the screen */}
+          <div 
+            className="filter-overlay"
+            onClick={() => setIsMobileFilterOpen(false)}
+          ></div>
+
+          <div className="mobile-filter-btn-container">
+            <button 
+              className="mobile-filter-btn" 
+              onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+            >
+              {isMobileFilterOpen ? <X size={20} /> : <Filter size={20} />}
+            </button>
+          </div>
+
+          {/* Sidebar Filters */}
+          <ProductFilterSidebar
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            inStockOnly={inStockOnly}
+            setInStockOnly={setInStockOnly}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setCurrentPage={setCurrentPage}
+            showSearch={true}
+            isMobileOpen={isMobileFilterOpen}
+            setIsMobileOpen={setIsMobileFilterOpen}
+          />
+        </div>
 
         {/* Main Content Area */}
         <main className="shop-main">
@@ -276,6 +282,7 @@ const Shop = () => {
         </main>
       </div>
     </div>
+    </>
   );
 };
 
