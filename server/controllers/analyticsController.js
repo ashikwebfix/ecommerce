@@ -230,13 +230,13 @@ const sendCAPIEvent = async (req, res) => {
     // Fetch tracking settings
     const trackingSetting = await Setting.findOne({ where: { key: 'tracking_settings' } });
     if (!trackingSetting || !trackingSetting.value) {
-      return res.status(400).json({ message: 'Tracking settings not configured' });
+      return res.status(200).json({ success: false, message: 'Tracking settings not configured' });
     }
     
     const { fbPixelId, fbCapiToken, fbTestEventCode } = trackingSetting.value;
     
     if (!fbPixelId || !fbCapiToken) {
-      return res.status(400).json({ message: 'Facebook CAPI not fully configured' });
+      return res.status(200).json({ success: false, message: 'Facebook CAPI not fully configured' });
     }
 
     // IP logic to avoid sending local IPs to Facebook (which causes API errors)

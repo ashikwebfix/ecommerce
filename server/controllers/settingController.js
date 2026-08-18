@@ -52,6 +52,11 @@ const getSettingByKey = async (req, res) => {
           maxOrdersPerIP: 5,
           timeWindowMinutes: 60
         });
+      } else if (req.params.key === 'general_settings') {
+        res.json({
+          maintenanceMode: false,
+          maintenanceMessage: 'Site is under maintenance. We will be right back.'
+        });
       } else {
         res.status(404).json({ message: 'Setting not found' });
       }
