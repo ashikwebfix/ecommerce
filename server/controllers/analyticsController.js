@@ -221,9 +221,64 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+const Setting = require('../models/Setting'); // Need Setting to fetch tracking settings
+
+const sendCAPIEvent = async (req, res) => {
+  try {
+    const { eventName, eventData, eventId, eventSourceUrl, clientIp, userAgent } = req.body;
+    
+    // Fetch tracking settings
+    const trackingSetting = await Setting.findOne({ where: { key: 'tracking_settings' } });
+    if (!trackingSetting || !trackingSetting.value) {
+      return res.status(400).json({ message: 'Tracking settings not configured' });
+    }
+    
+    const { fbPixelId, fbCapiToken, fbTestEventCode } = trackingSetting.value;
+    
+    if (!fbPixelId || !fbCapiToken) {
+      return res.status(400).json({ message: 'Facebook CAPI not fully configured' });
+    }
+
+    // IP logic to avoid sending local IPs to Facebook (which causes API errors)
+    let finalClientIp = clientIp || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    if (finalClientIp === '::1' || finalClientIp === '127.0.0.1') {
+      finalClientIp = '1.1.1.1'; // FB requires a valid IP format, mock it for local dev
+    }
+
+    const payload = {
+      data: [
+        {
+          event_name: eventName,
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: eventId,
+          event_source_url: eventSourceUrl,
+          action_source: 'website',
+          user_data: {
+            client_ip_address: finalClientIp,
+            client_user_agent: userAgent || req.headers['user-agent']
+          },
+          custom_data: eventData
+        }
+      ]
+    };
+
+    if (fbTestEventCode && fbTestEventCode.trim() !== '') {
+      payload.test_event_code = fbTestEventCode.trim();
+    }
+
+    const response = await axios.post(`https://graph.facebook.com/v17.0/${fbPixelId}/events?access_token=${fbCapiToken}`, payload);
+    
+    res.json({ success: true, fbResponse: response.data });
+  } catch (error) {
+    console.error('CAPI Error:', error.response?.data || error.message);
+    res.status(500).json({ message: 'Failed to send CAPI event', error: error.response?.data || error.message });
+  }
+};
+
 module.exports = {
   initSession,
   trackPageview,
   trackClicks,
-  getDashboardStats
+  getDashboardStats,
+  sendCAPIEvent
 };

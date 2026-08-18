@@ -10,14 +10,13 @@ import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Categories from './pages/Categories';
-import About from './pages/About';
-import Contact from './pages/Contact';
 import SearchResults from './pages/SearchResults';
 import Tracker from './components/Tracker';
 import Login from './pages/Login';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import ProductDetails from './pages/ProductDetails';
+import DynamicPage from './pages/DynamicPage';
 import Profile from './pages/Profile';
 import Dashboard from './pages/admin/Dashboard';
 import AdminProducts from './pages/admin/AdminProducts';
@@ -37,6 +36,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './components/AdminLayout';
 import AdminAbandonedCarts from './pages/admin/AdminAbandonedCarts';
 import AdminUsers from './pages/admin/AdminUsers';
+import AdminPages from './pages/admin/AdminPages';
 
 function App() {
   return (
@@ -49,12 +49,11 @@ function App() {
         <Routes>
         {/* Customer Routes */}
         <Route path="/" element={<><Navbar /><div className="page-wrapper"><Home /><Footer /></div></>} />
-        <Route path="/about" element={<><Navbar /><div className="page-wrapper"><About /><Footer /></div></>} />
-        <Route path="/contact" element={<><Navbar /><div className="page-wrapper"><Contact /><Footer /></div></>} />
         <Route path="/shop" element={<><Navbar /><div className="page-wrapper"><Shop /><Footer /></div></>} />
         <Route path="/categories" element={<><Navbar /><div className="page-wrapper"><Categories /><Footer /></div></>} />
         <Route path="/search" element={<><Navbar /><div className="page-wrapper"><SearchResults /><Footer /></div></>} />
         <Route path="/product/:slug" element={<><Navbar /><div className="page-wrapper"><ProductDetails /><Footer /></div></>} />
+        <Route path="/pages/:slug" element={<><Navbar /><div className="page-wrapper"><DynamicPage /><Footer /></div></>} />
         <Route path="/login" element={<><Navbar /><div className="page-wrapper"><Login /><Footer /></div></>} />
         <Route path="/profile" element={<><Navbar /><div className="page-wrapper"><Profile /><Footer /></div></>} />
         <Route path="/cart" element={<><Navbar /><div className="page-wrapper"><Cart /><Footer /></div></>} />
@@ -81,6 +80,7 @@ function App() {
           <Route path="bundles/edit/:id" element={<AdminBundleForm />} />
           <Route path="fraud-protection" element={<AdminFraudProtection />} />
           <Route path="users" element={<AdminUsers />} />
+          <Route path="pages" element={<AdminPages />} />
         </Route>
       </Routes>
       <MobileBottomNav />

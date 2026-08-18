@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, Truck, Plus, Trash2, Save, Navigation, GripVertical, LayoutTemplate, Image as ImageIcon, Tag, Box, Star, X } from 'lucide-react';
+import { Settings as SettingsIcon, Truck, Plus, Trash2, Save, Navigation, GripVertical, LayoutTemplate, Image as ImageIcon, Tag, Box, Star, X, XCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import MediaPickerModal from '../../components/MediaPickerModal';
 
 const AdminSettings = () => {
   const [deliveryMethods, setDeliveryMethods] = useState([]);
   const [headerMenu, setHeaderMenu] = useState([]);
-  const [trackingSettings, setTrackingSettings] = useState({ gtmId: '', fbPixelId: '', fbCapiToken: '' });
+  const [trackingSettings, setTrackingSettings] = useState({ gtmId: '', fbPixelId: '', fbCapiToken: '', fbTestEventCode: '' });
   const [pathaoSettings, setPathaoSettings] = useState({ clientId: '', clientSecret: '', username: '', password: '', storeId: '', baseUrl: 'https://api-hermes.pathao.com' });
   const [storefrontUI, setStorefrontUI] = useState({
-    heroBanners: [], superHourDeals: { productIds: [], endTime: '' },
+    heroBanners: [], promotionalBanners: [], trustBadges: [], superHourDeals: { productIds: [], endTime: '' },
     featuredProducts: { title: '', productIds: [] }, customSections: []
   });
+  const [pickerType, setPickerType] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +82,14 @@ const AdminSettings = () => {
   const handleAddBanner = () => setStorefrontUI(prev => ({ ...prev, heroBanners: [...prev.heroBanners, { id: Date.now().toString(), image: '', title: '', subtitle: '', link: '/' }] }));
   const handleUpdateBanner = (id, field, value) => setStorefrontUI(prev => ({ ...prev, heroBanners: prev.heroBanners.map(b => b.id === id ? { ...b, [field]: value } : b) }));
   const handleRemoveBanner = (id) => setStorefrontUI(prev => ({ ...prev, heroBanners: prev.heroBanners.filter(b => b.id !== id) }));
+
+  const handleAddPromoBanner = () => setStorefrontUI(prev => ({ ...prev, promotionalBanners: [...(prev.promotionalBanners || []), { id: Date.now().toString(), image: '', title: '', link: '/' }] }));
+  const handleUpdatePromoBanner = (id, field, value) => setStorefrontUI(prev => ({ ...prev, promotionalBanners: (prev.promotionalBanners || []).map(b => b.id === id ? { ...b, [field]: value } : b) }));
+  const handleRemovePromoBanner = (id) => setStorefrontUI(prev => ({ ...prev, promotionalBanners: (prev.promotionalBanners || []).filter(b => b.id !== id) }));
+
+  const handleAddTrustBadge = () => setStorefrontUI(prev => ({ ...prev, trustBadges: [...(prev.trustBadges || []), { id: Date.now().toString(), text: '', icon: 'Star' }] }));
+  const handleUpdateTrustBadge = (id, field, value) => setStorefrontUI(prev => ({ ...prev, trustBadges: (prev.trustBadges || []).map(b => b.id === id ? { ...b, [field]: value } : b) }));
+  const handleRemoveTrustBadge = (id) => setStorefrontUI(prev => ({ ...prev, trustBadges: (prev.trustBadges || []).filter(b => b.id !== id) }));
 
   const toggleSuperHourProduct = (productId) => setStorefrontUI(prev => {
     const current = prev.superHourDeals.productIds || [];
@@ -189,8 +199,17 @@ const AdminSettings = () => {
                       <span style={{ position: 'absolute', top: '1rem', left: '-1rem', background: 'var(--text-primary)', color: '#fff', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontSize: '0.8rem', fontWeight: 'bold' }}>{index + 1}</span>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div>
-                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Image URL</label>
-                          <input className="input-field" value={banner.image} onChange={(e) => handleUpdateBanner(banner.id, 'image', e.target.value)} placeholder="https://..." style={{ background: '#fff' }} />
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Image</label>
+                          {banner.image ? (
+                            <div style={{ position: 'relative', width: '100%', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                              <img src={banner.image} alt="Banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <button type="button" onClick={() => handleUpdateBanner(banner.id, 'image', '')} style={{ position:'absolute', top: 4, right: 4, background:'#fff', borderRadius:'50%', padding: 4, border:'none', cursor:'pointer' }}><XCircle size={16} color="#ef4444" /></button>
+                            </div>
+                          ) : (
+                            <button type="button" className="btn btn-secondary" onClick={() => setPickerType(`hero_${banner.id}`)} style={{ width: '100%', height: '80px', display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '2px dashed var(--border-color)', justifyContent: 'center' }}>
+                              <ImageIcon size={18} /> Select Image
+                            </button>
+                          )}
                         </div>
                         <div>
                           <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Link URL</label>
@@ -213,6 +232,90 @@ const AdminSettings = () => {
                   <button className="btn btn-secondary" onClick={handleAddBanner} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Plus size={18} /> Add Banner Slide
                   </button>
+                </div>
+              </div>
+
+              {/* 1.5 Promotional Images (Under Hero) */}
+              <div style={{ marginBottom: '3rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ImageIcon size={18} /> Promotional Images (Under Hero)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {(storefrontUI.promotionalBanners || []).map((banner, index) => (
+                    <div key={banner.id} style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e5e7eb', position: 'relative' }}>
+                      <span style={{ position: 'absolute', top: '1rem', left: '-1rem', background: 'var(--text-primary)', color: '#fff', width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontSize: '0.8rem', fontWeight: 'bold' }}>{index + 1}</span>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                        <div style={{ gridColumn: 'span 2' }}>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Image</label>
+                          {banner.image ? (
+                            <div style={{ position: 'relative', width: '100%', height: '120px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                              <img src={banner.image} alt="Promo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <button type="button" onClick={() => handleUpdatePromoBanner(banner.id, 'image', '')} style={{ position:'absolute', top: 4, right: 4, background:'#fff', borderRadius:'50%', padding: 4, border:'none', cursor:'pointer' }}><XCircle size={16} color="#ef4444" /></button>
+                            </div>
+                          ) : (
+                            <button type="button" className="btn btn-secondary" onClick={() => setPickerType(`promo_${banner.id}`)} style={{ width: '100%', height: '120px', display: 'flex', flexDirection: 'column', gap: '0.5rem', border: '2px dashed var(--border-color)', justifyContent: 'center' }}>
+                              <ImageIcon size={18} /> Select Image
+                            </button>
+                          )}
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Title</label>
+                          <input className="input-field" value={banner.title} onChange={(e) => handleUpdatePromoBanner(banner.id, 'title', e.target.value)} placeholder="e.g. Smart Watches" style={{ background: '#fff' }} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Link URL</label>
+                          <input className="input-field" value={banner.link} onChange={(e) => handleUpdatePromoBanner(banner.id, 'link', e.target.value)} placeholder="/shop" style={{ background: '#fff' }} />
+                        </div>
+                      </div>
+                      <button className="btn btn-secondary" onClick={() => handleRemovePromoBanner(banner.id)} style={{ position: 'absolute', top: '1rem', right: '1rem', padding: '0.5rem', color: '#ef4444', borderColor: 'transparent', background: 'rgba(239, 68, 68, 0.1)' }}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                  {(storefrontUI.promotionalBanners || []).length < 3 && (
+                    <button className="btn btn-secondary" onClick={handleAddPromoBanner} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Plus size={18} /> Add Promo Image
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* 1.75 Trust Badges */}
+              <div style={{ marginBottom: '3rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Star size={18} /> Trust Badges (Under Promo)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {(storefrontUI.trustBadges || []).map((badge) => (
+                    <div key={badge.id} style={{ display: 'flex', gap: '1rem', background: '#f9fafb', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e5e7eb', alignItems: 'flex-end', position: 'relative' }}>
+                      <div style={{ flex: 2 }}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Badge Text</label>
+                        <input className="input-field" value={badge.text} onChange={(e) => handleUpdateTrustBadge(badge.id, 'text', e.target.value)} placeholder="e.g. Free Shipping" style={{ background: '#fff' }} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 500, marginBottom: '0.25rem' }}>Icon</label>
+                        <select className="input-field" value={badge.icon} onChange={(e) => handleUpdateTrustBadge(badge.id, 'icon', e.target.value)} style={{ background: '#fff' }}>
+                          <option value="Star">Star</option>
+                          <option value="Truck">Truck</option>
+                          <option value="ShieldCheck">Shield</option>
+                          <option value="RotateCcw">Return (Rotate)</option>
+                          <option value="Trophy">Trophy</option>
+                          <option value="Gem">Gem</option>
+                          <option value="Heart">Heart</option>
+                          <option value="Zap">Zap</option>
+                          <option value="ShoppingBag">Bag</option>
+                        </select>
+                      </div>
+                      <button className="btn btn-secondary" onClick={() => handleRemoveTrustBadge(badge.id)} style={{ padding: '0.65rem', color: '#ef4444', borderColor: 'transparent', background: 'rgba(239, 68, 68, 0.1)' }}>
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ))}
+                  {(storefrontUI.trustBadges || []).length < 4 && (
+                    <button className="btn btn-secondary" onClick={handleAddTrustBadge} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <Plus size={18} /> Add Trust Badge
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -479,7 +582,23 @@ const AdminSettings = () => {
                     value={trackingSettings.fbCapiToken || ''} 
                     onChange={e => setTrackingSettings({...trackingSettings, fbCapiToken: e.target.value})} 
                   />
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem', display: 'block' }}>Required for server-side purchase tracking. Generate this in Facebook Events Manager.</span>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                    Required for Server-Side Tracking. Generate this in Events Manager {'>'} Settings {'>'} Conversions API.
+                  </p>
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Facebook Test Event Code (Optional)</label>
+                  <input 
+                    className="input-field" 
+                    placeholder="e.g. TEST12345" 
+                    style={{ width: '100%' }}
+                    value={trackingSettings.fbTestEventCode || ''} 
+                    onChange={e => setTrackingSettings({...trackingSettings, fbTestEventCode: e.target.value})} 
+                  />
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                    Used for debugging CAPI events in Events Manager. Remove this in production.
+                  </p>
                 </div>
               </div>
             </div>
@@ -525,6 +644,22 @@ const AdminSettings = () => {
           )}
 
         </div>
+
+        <MediaPickerModal 
+          isOpen={!!pickerType} 
+          onClose={() => setPickerType(null)} 
+          multiSelect={false}
+          onSelect={(selection) => {
+            if (pickerType?.startsWith('hero_')) {
+              const id = pickerType.split('_')[1];
+              handleUpdateBanner(id, 'image', selection);
+            } else if (pickerType?.startsWith('promo_')) {
+              const id = pickerType.split('_')[1];
+              handleUpdatePromoBanner(id, 'image', selection);
+            }
+            setPickerType(null);
+          }}
+        />
       </div>
   );
 };

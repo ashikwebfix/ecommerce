@@ -136,21 +136,42 @@ const addOrderItems = async (req, res) => {
       try {
         const trackingSetting = await Setting.findOne({ where: { key: 'tracking_settings' } });
         if (trackingSetting && trackingSetting.value) {
-          const { fbPixelId, fbCapiToken } = trackingSetting.value;
+          const { fbPixelId, fbCapiToken, fbTestEventCode } = trackingSetting.value;
           
           if (fbPixelId && fbCapiToken) {
+            
+            // Format IP for FB (avoid local IPs)
+            let finalClientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+            if (finalClientIp === '::1' || finalClientIp === '127.0.0.1') finalClientIp = '1.1.1.1';
+
+            // Parse Name
+            const nameParts = name ? name.trim().split(/\s+/) : [];
+            let fnHash = [], lnHash = [];
+            if (nameParts.length > 0) {
+              fnHash.push(hashData(nameParts[0]));
+              if (nameParts.length > 1) {
+                lnHash.push(hashData(nameParts.slice(1).join(' ')));
+              }
+            }
+
             const eventData = {
               data: [
                 {
                   event_name: 'Purchase',
                   event_time: Math.floor(Date.now() / 1000),
+                  event_id: `purchase_${order.id}`,
                   action_source: 'website',
+                  event_source_url: `${process.env.FRONTEND_URL || 'http://localhost:6711'}/checkout`,
                   user_data: {
                     client_user_agent: req.headers['user-agent'],
-                    client_ip_address: req.ip,
+                    client_ip_address: finalClientIp,
                     em: req.user && req.user.email ? [hashData(req.user.email)] : [],
                     ph: phone ? [hashData(phone)] : [],
-                    fn: name ? [hashData(name.split(' ')[0])] : [],
+                    fn: fnHash,
+                    ln: lnHash,
+                    ct: city ? [hashData(city)] : [],
+                    zp: postalCode ? [hashData(postalCode)] : [],
+                    country: [hashData('bd')]
                   },
                   custom_data: {
                     currency: 'BDT',
@@ -162,6 +183,10 @@ const addOrderItems = async (req, res) => {
                 }
               ]
             };
+
+            if (fbTestEventCode && fbTestEventCode.trim() !== '') {
+              eventData.test_event_code = fbTestEventCode.trim();
+            }
 
             await axios.post(`https://graph.facebook.com/v17.0/${fbPixelId}/events?access_token=${fbCapiToken}`, eventData);
             console.log('FB CAPI Purchase Event Sent');

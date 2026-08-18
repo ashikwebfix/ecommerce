@@ -14,6 +14,7 @@ const bundleRoutes = require('./routes/bundleRoutes');
 const pathaoRoutes = require('./routes/pathaoRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const abandonedCartRoutes = require('./routes/abandonedCartRoutes');
+const pageRoutes = require('./routes/pageRoutes');
 
 const { migrateProductSlugs } = require('./controllers/productController');
 
@@ -43,6 +44,7 @@ app.use('/api/bundles', bundleRoutes);
 app.use('/api/pathao', pathaoRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/abandoned-carts', abandonedCartRoutes);
+app.use('/api/pages', pageRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');

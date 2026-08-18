@@ -1,6 +1,32 @@
 /**
  * Utility functions for triggering Google Tag Manager and Facebook Pixel events.
+ * Now includes full Server-Side CAPI tracking support with deduplication.
  */
+
+const generateEventId = () => {
+  return 'evt_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+};
+
+const sendCAPI = async (eventName, eventData, eventId) => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    await fetch(`${apiUrl}/api/analytics/capi`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        eventName,
+        eventData,
+        eventId,
+        eventSourceUrl: window.location.href,
+        userAgent: navigator.userAgent
+      })
+    });
+  } catch (error) {
+    console.error('CAPI fetch error:', error);
+  }
+};
 
 // Helper to push to dataLayer (GTM)
 export const pushToDataLayer = (data) => {
@@ -9,25 +35,29 @@ export const pushToDataLayer = (data) => {
   }
 };
 
-// Helper to push to fbq (Facebook Pixel)
-export const pushToFbq = (event, eventName, data) => {
+// Helper to push to fbq (Facebook Pixel) with deduplication eventID
+export const pushToFbq = (event, eventName, data, eventId) => {
   if (typeof window !== 'undefined' && window.fbq) {
+    const options = eventId ? { eventID: eventId } : undefined;
     if (data) {
-      window.fbq(event, eventName, data);
+      window.fbq(event, eventName, data, options);
     } else {
-      window.fbq(event, eventName);
+      window.fbq(event, eventName, undefined, options);
     }
   }
 };
 
 export const trackPageView = (url) => {
+  const eventId = generateEventId();
   pushToDataLayer({ event: 'page_view', page_path: url });
-  pushToFbq('track', 'PageView');
+  pushToFbq('track', 'PageView', undefined, eventId);
+  sendCAPI('PageView', { page_path: url }, eventId);
 };
 
 export const trackViewContent = (product) => {
   if (!product) return;
   const price = product.sellPrice || product.price || 0;
+  const eventId = generateEventId();
   
   // GTM
   pushToDataLayer({
@@ -42,19 +72,23 @@ export const trackViewContent = (product) => {
     }
   });
 
-  // FB
-  pushToFbq('track', 'ViewContent', {
+  const fbData = {
     content_name: product.name,
     content_ids: [product.id],
     content_type: 'product',
     value: price,
     currency: 'BDT'
-  });
+  };
+
+  // FB Web + CAPI
+  pushToFbq('track', 'ViewContent', fbData, eventId);
+  sendCAPI('ViewContent', fbData, eventId);
 };
 
 export const trackAddToCart = (product, qty = 1) => {
   if (!product) return;
   const price = product.sellPrice || product.price || 0;
+  const eventId = generateEventId();
 
   // GTM
   pushToDataLayer({
@@ -69,18 +103,52 @@ export const trackAddToCart = (product, qty = 1) => {
     }
   });
 
-  // FB
-  pushToFbq('track', 'AddToCart', {
+  const fbData = {
     content_name: product.name,
     content_ids: [product.id],
     content_type: 'product',
     value: price * qty,
     currency: 'BDT'
+  };
+
+  // FB Web + CAPI
+  pushToFbq('track', 'AddToCart', fbData, eventId);
+  sendCAPI('AddToCart', fbData, eventId);
+};
+
+export const trackAddToWishlist = (product) => {
+  if (!product) return;
+  const price = product.sellPrice || product.price || 0;
+  const eventId = generateEventId();
+
+  // GTM
+  pushToDataLayer({
+    event: 'add_to_wishlist',
+    ecommerce: {
+      items: [{
+        item_name: product.name,
+        item_id: product.id,
+        price: price
+      }]
+    }
   });
+
+  const fbData = {
+    content_name: product.name,
+    content_ids: [product.id],
+    content_type: 'product',
+    value: price,
+    currency: 'BDT'
+  };
+
+  // FB Web + CAPI
+  pushToFbq('track', 'AddToWishlist', fbData, eventId);
+  sendCAPI('AddToWishlist', fbData, eventId);
 };
 
 export const trackBeginCheckout = (cartItems, totalPrice) => {
   if (!cartItems || cartItems.length === 0) return;
+  const eventId = generateEventId();
 
   // GTM
   pushToDataLayer({
@@ -97,18 +165,22 @@ export const trackBeginCheckout = (cartItems, totalPrice) => {
     }
   });
 
-  // FB
-  pushToFbq('track', 'InitiateCheckout', {
+  const fbData = {
     content_ids: cartItems.map(item => item.productId || item.id),
     content_type: 'product',
     value: totalPrice,
     currency: 'BDT',
     num_items: cartItems.length
-  });
+  };
+
+  // FB Web + CAPI
+  pushToFbq('track', 'InitiateCheckout', fbData, eventId);
+  sendCAPI('InitiateCheckout', fbData, eventId);
 };
 
 export const trackSearch = (query) => {
   if (!query) return;
+  const eventId = generateEventId();
 
   // GTM
   pushToDataLayer({
@@ -116,15 +188,20 @@ export const trackSearch = (query) => {
     search_term: query
   });
 
-  // FB
-  pushToFbq('track', 'Search', {
+  const fbData = {
     search_string: query
-  });
+  };
+
+  // FB Web + CAPI
+  pushToFbq('track', 'Search', fbData, eventId);
+  sendCAPI('Search', fbData, eventId);
 };
 
-// Note: Purchase is also tracked server-side via CAPI. 
 export const trackPurchase = (order, cartItems) => {
   if (!order) return;
+  
+  // order.id is unique per purchase, so we can use it as the deduplication eventId!
+  const eventId = 'purchase_' + order.id;
 
   // GTM
   pushToDataLayer({
@@ -142,11 +219,15 @@ export const trackPurchase = (order, cartItems) => {
     }
   });
 
-  // FB (Client-side)
-  pushToFbq('track', 'Purchase', {
+  const fbData = {
     content_ids: cartItems.map(item => item.productId || item.id),
     content_type: 'product',
     value: order.totalPrice,
     currency: 'BDT'
-  });
+  };
+
+  // FB Web
+  pushToFbq('track', 'Purchase', fbData, eventId);
+  
+  // Since orderController handles CAPI for Purchase, we don't call sendCAPI here.
 };

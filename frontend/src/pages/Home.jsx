@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Smartphone, Shirt, Home as HomeIcon, Sparkles, Trophy, Gem } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw, ChevronLeft, ChevronRight, Smartphone, Shirt, Home as HomeIcon, Sparkles, Trophy, Gem, Star, Zap, Heart, ShoppingBag, PackageSearch } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { Helmet } from 'react-helmet-async';
+
+const IconMap = {
+  ShieldCheck, Truck, RotateCcw, Smartphone, Shirt, Home: HomeIcon, Sparkles, Trophy, Gem, Star, Zap, Heart, ShoppingBag, PackageSearch
+};
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -19,6 +23,18 @@ const Home = () => {
     { id: 1, image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000', title: 'Summer Collection', subtitle: 'Up to 50% Off' },
     { id: 2, image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000', title: 'New Arrivals', subtitle: 'Shop the Latest Trends' },
     { id: 3, image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000', title: 'Exclusive Accessories', subtitle: 'Premium Quality' },
+  ];
+
+  const defaultPromos = [
+    { id: 1, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800', title: 'স্মার্ট ওয়াচ', link: '/shop' },
+    { id: 2, image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&q=80&w=800', title: 'ডিজিটাল ক্যামেরা', link: '/shop' },
+    { id: 3, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800', title: 'অডিও গ্যাজেটস', link: '/shop' }
+  ];
+
+  const defaultTrustBadges = [
+    { id: 1, text: 'ফ্রি শিপিং', icon: 'Truck' },
+    { id: 2, text: 'নিরাপদ পেমেন্ট', icon: 'ShieldCheck' },
+    { id: 3, text: '৩০-দিন রিটার্ন পলিসি', icon: 'RotateCcw' }
   ];
 
   useEffect(() => {
@@ -171,40 +187,33 @@ const Home = () => {
 
       {/* 3 Promotional Images Under Hero */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '4rem' }}>
-        <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-           <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=800" alt="Watches" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
-           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>স্মার্ট ওয়াচ</h3>
-           </div>
-        </div>
-        <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-           <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&q=80&w=800" alt="Cameras" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
-           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>ডিজিটাল ক্যামেরা</h3>
-           </div>
-        </div>
-        <div style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}>
-           <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=800" alt="Audio" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
-           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
-             <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>অডিও গ্যাজেটস</h3>
-           </div>
-        </div>
+        {(uiConfig?.promotionalBanners?.length > 0 ? uiConfig.promotionalBanners : defaultPromos).map((promo, idx) => (
+          <div 
+            key={promo.id || idx} 
+            style={{ height: '220px', borderRadius: '16px', overflow: 'hidden', position: 'relative', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', cursor: 'pointer' }}
+            onClick={() => window.location.href = promo.link || '/shop'}
+          >
+             <img src={promo.image} alt={promo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
+             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)', display: 'flex', alignItems: 'flex-end', padding: '1.5rem', pointerEvents: 'none' }}>
+               <h3 style={{ color: 'white', fontWeight: '700', fontSize: '1.5rem', margin: 0, textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{promo.title}</h3>
+             </div>
+          </div>
+        ))}
       </div>
 
       {/* Trust Badges */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', textAlign: 'center', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0', marginBottom: '4rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
-          <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><Truck size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>ফ্রি শিপিং</span>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
-          <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><ShieldCheck size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>নিরাপদ পেমেন্ট</span>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
-          <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}><RotateCcw size={24} color="var(--accent-primary)" /></div>
-          <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>৩০-দিন রিটার্ন পলিসি</span>
-        </div>
+        {(uiConfig?.trustBadges?.length > 0 ? uiConfig.trustBadges : defaultTrustBadges).map((badge, idx) => {
+          const IconComp = IconMap[badge.icon] || IconMap.Star;
+          return (
+            <div key={badge.id || idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: 'rgba(15, 81, 50, 0.1)', padding: '0.75rem', borderRadius: '50%' }}>
+                <IconComp size={24} color="var(--accent-primary)" />
+              </div>
+              <span style={{ fontWeight: '600', fontSize: '0.85rem' }}>{badge.text}</span>
+            </div>
+          );
+        })}
       </div>
 
       {/* Super Hour Deals */}
