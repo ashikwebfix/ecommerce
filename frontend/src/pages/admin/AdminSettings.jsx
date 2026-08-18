@@ -8,6 +8,7 @@ const AdminSettings = () => {
   const [headerMenu, setHeaderMenu] = useState([]);
   const [trackingSettings, setTrackingSettings] = useState({ gtmId: '', fbPixelId: '', fbCapiToken: '', fbTestEventCode: '' });
   const [pathaoSettings, setPathaoSettings] = useState({ clientId: '', clientSecret: '', username: '', password: '', storeId: '', baseUrl: 'https://api-hermes.pathao.com' });
+  const [generalSettings, setGeneralSettings] = useState({ maintenanceMode: false, maintenanceMessage: 'Site is under maintenance. We will be right back.' });
   const [storefrontUI, setStorefrontUI] = useState({
     heroBanners: [], promotionalBanners: [], trustBadges: [], superHourDeals: { productIds: [], endTime: '' },
     featuredProducts: { title: '', productIds: [] }, customSections: []
@@ -55,6 +56,12 @@ const AdminSettings = () => {
       if (pathaoRes.ok) {
         const pathaoData = await pathaoRes.json();
         if (pathaoData) setPathaoSettings(pathaoData);
+      }
+
+      const generalRes = await fetch(import.meta.env.VITE_API_URL + '/api/settings/general_settings', { headers: { Authorization: `Bearer ${token}` }});
+      if (generalRes.ok) {
+        const generalData = await generalRes.json();
+        if (generalData) setGeneralSettings(generalData);
       }
 
       const prodRes = await fetch(import.meta.env.VITE_API_URL + '/api/products');
@@ -133,7 +140,12 @@ const AdminSettings = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ value: pathaoSettings })
       });
-      if (res1.ok && res2.ok && res3.ok && res4.ok && res5.ok) {
+      const res6 = await fetch(import.meta.env.VITE_API_URL + '/api/settings/general_settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ value: generalSettings })
+      });
+      if (res1.ok && res2.ok && res3.ok && res4.ok && res5.ok && res6.ok) {
         alert('Settings saved successfully!');
       } else {
         alert('Failed to save settings.');
@@ -169,6 +181,7 @@ const AdminSettings = () => {
       </header>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem', overflowX: 'auto' }}>
+        <button className={`tab-btn ${activeTab === 'general' ? 'active' : ''}`} onClick={() => navigate('/admin/settings?tab=general')}>General</button>
         <button className={`tab-btn ${activeTab === 'storefront' ? 'active' : ''}`} onClick={() => navigate('/admin/settings?tab=storefront')}>Storefront UI</button>
         <button className={`tab-btn ${activeTab === 'navigation' ? 'active' : ''}`} onClick={() => navigate('/admin/settings?tab=navigation')}>Navigation</button>
         <button className={`tab-btn ${activeTab === 'delivery' ? 'active' : ''}`} onClick={() => navigate('/admin/settings?tab=delivery')}>Delivery Rates</button>
@@ -178,6 +191,49 @@ const AdminSettings = () => {
 
       <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', border: '1px solid var(--border-color)', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
           
+          {activeTab === 'general' && (
+            <div className="animate-fade-in">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
+                <SettingsIcon size={20} color="var(--accent-primary)" />
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 600 }}>General Settings</h2>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '600px' }}>
+                <div style={{ background: '#f9fafb', padding: '1.5rem', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)' }}>Maintenance Mode</h3>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>When enabled, customers will see a maintenance page. Only admins can view the site.</p>
+                    </div>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox" 
+                        style={{ display: 'none' }} 
+                        checked={generalSettings.maintenanceMode} 
+                        onChange={(e) => setGeneralSettings({ ...generalSettings, maintenanceMode: e.target.checked })} 
+                      />
+                      <div style={{ width: '44px', height: '24px', background: generalSettings.maintenanceMode ? 'var(--accent-primary)' : '#cbd5e1', borderRadius: '12px', position: 'relative', transition: 'background 0.3s' }}>
+                        <div style={{ width: '20px', height: '20px', background: '#fff', borderRadius: '50%', position: 'absolute', top: '2px', left: generalSettings.maintenanceMode ? '22px' : '2px', transition: 'left 0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}></div>
+                      </div>
+                    </label>
+                  </div>
+                  {generalSettings.maintenanceMode && (
+                    <div className="animate-fade-in">
+                      <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, fontSize: '0.9rem' }}>Maintenance Message</label>
+                      <textarea 
+                        className="input-field" 
+                        rows="3" 
+                        value={generalSettings.maintenanceMessage} 
+                        onChange={(e) => setGeneralSettings({ ...generalSettings, maintenanceMessage: e.target.value })}
+                        style={{ width: '100%', background: '#fff' }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'storefront' && (
             <div className="animate-fade-in">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>

@@ -38,7 +38,46 @@ import AdminAbandonedCarts from './pages/admin/AdminAbandonedCarts';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminPages from './pages/admin/AdminPages';
 
+import Maintenance from './pages/Maintenance';
+
+const CustomerLayout = ({ children, maintenanceMode, maintenanceMessage, isAdmin }) => {
+  if (maintenanceMode && !isAdmin) {
+    return <Maintenance message={maintenanceMessage} />;
+  }
+  return (
+    <>
+      <Navbar />
+      <div className="page-wrapper">{children}</div>
+      <Footer />
+    </>
+  );
+};
+
 function App() {
+  const [maintenanceMode, setMaintenanceMode] = React.useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = React.useState('');
+
+  React.useEffect(() => {
+    const fetchMaintenance = async () => {
+      try {
+        const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:6710') + '/api/settings/general_settings');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.value && data.value.maintenanceMode) {
+            setMaintenanceMode(true);
+            setMaintenanceMessage(data.value.maintenanceMessage);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchMaintenance();
+  }, []);
+
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+  const isAdmin = userInfo?.isAdmin || userInfo?.role === 'superadmin' || userInfo?.role === 'admin';
+
   return (
     <HelmetProvider>
       <Router>
@@ -48,16 +87,16 @@ function App() {
         <Toaster position="top-right" />
         <Routes>
         {/* Customer Routes */}
-        <Route path="/" element={<><Navbar /><div className="page-wrapper"><Home /><Footer /></div></>} />
-        <Route path="/shop" element={<><Navbar /><div className="page-wrapper"><Shop /><Footer /></div></>} />
-        <Route path="/categories" element={<><Navbar /><div className="page-wrapper"><Categories /><Footer /></div></>} />
-        <Route path="/search" element={<><Navbar /><div className="page-wrapper"><SearchResults /><Footer /></div></>} />
-        <Route path="/product/:slug" element={<><Navbar /><div className="page-wrapper"><ProductDetails /><Footer /></div></>} />
-        <Route path="/pages/:slug" element={<><Navbar /><div className="page-wrapper"><DynamicPage /><Footer /></div></>} />
-        <Route path="/login" element={<><Navbar /><div className="page-wrapper"><Login /><Footer /></div></>} />
-        <Route path="/profile" element={<><Navbar /><div className="page-wrapper"><Profile /><Footer /></div></>} />
-        <Route path="/cart" element={<><Navbar /><div className="page-wrapper"><Cart /><Footer /></div></>} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Home /></CustomerLayout>} />
+        <Route path="/shop" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Shop /></CustomerLayout>} />
+        <Route path="/categories" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Categories /></CustomerLayout>} />
+        <Route path="/search" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><SearchResults /></CustomerLayout>} />
+        <Route path="/product/:slug" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><ProductDetails /></CustomerLayout>} />
+        <Route path="/pages/:slug" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><DynamicPage /></CustomerLayout>} />
+        <Route path="/login" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Login /></CustomerLayout>} />
+        <Route path="/profile" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Profile /></CustomerLayout>} />
+        <Route path="/cart" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Cart /></CustomerLayout>} />
+        <Route path="/checkout" element={maintenanceMode && !isAdmin ? <Maintenance message={maintenanceMessage} /> : <Checkout />} />
         
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
