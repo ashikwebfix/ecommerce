@@ -55,9 +55,10 @@ export const pushToFbq = (event, eventName, data, eventId) => {
 
 export const trackPageView = (url) => {
   const eventId = generateEventId();
-  pushToDataLayer({ event: 'page_view', page_path: url, event_id: eventId });
-  pushToFbq('track', 'PageView', undefined, eventId);
-  sendCAPI('PageView', { page_path: url }, eventId);
+  const data = { page_path: url };
+  pushToDataLayer({ event: 'page_view', ...data, event_id: eventId });
+  pushToFbq('track', 'PageView', data, eventId);
+  sendCAPI('PageView', data, eventId);
 };
 
 export const trackViewContent = (product) => {
