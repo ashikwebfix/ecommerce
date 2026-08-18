@@ -9,6 +9,7 @@ const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Filter States
   const [selectedCategories, setSelectedCategories] = useState(searchParams.get('categories') ? searchParams.get('categories').split(',') : []);
@@ -150,6 +151,20 @@ const Shop = () => {
         </div>
       </div>
 
+      {/* Mobile Filter Toggle Button */}
+      <button 
+        className="mobile-filter-btn" 
+        onClick={() => setIsMobileFilterOpen(true)}
+      >
+        <Filter size={24} />
+      </button>
+
+      {/* Overlay for Mobile Sidebar */}
+      <div 
+        className={`filter-overlay ${isMobileFilterOpen ? 'open' : ''}`} 
+        onClick={() => setIsMobileFilterOpen(false)}
+      ></div>
+
       <div className="shop-layout">
         
         {/* Sidebar Filters */}
@@ -166,6 +181,8 @@ const Shop = () => {
           setSearchQuery={setSearchQuery}
           setCurrentPage={setCurrentPage}
           showSearch={true}
+          isMobileOpen={isMobileFilterOpen}
+          setIsMobileOpen={setIsMobileFilterOpen}
         />
 
         {/* Main Content Area */}

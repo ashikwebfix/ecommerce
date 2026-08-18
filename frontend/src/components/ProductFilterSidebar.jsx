@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Filter } from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 
 const ProductFilterSidebar = ({
   selectedCategories = [],
@@ -14,6 +14,8 @@ const ProductFilterSidebar = ({
   setSearchQuery,
   setCurrentPage,
   showSearch = true,
+  isMobileOpen,
+  setIsMobileOpen,
 }) => {
   const [globalProducts, setGlobalProducts] = useState([]);
 
@@ -75,18 +77,29 @@ const ProductFilterSidebar = ({
   };
 
   return (
-    <aside className="shop-sidebar">
+    <aside className={`shop-sidebar ${isMobileOpen ? 'open' : ''}`}>
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem',
+          justifyContent: 'space-between',
           marginBottom: '1.5rem',
           color: 'var(--text-primary)',
         }}
       >
-        <Filter size={20} />
-        <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>ফিল্টার</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Filter size={20} />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: '800', margin: 0 }}>ফিল্টার</h2>
+        </div>
+        {setIsMobileOpen && (
+          <button 
+            className="close-filter-btn"
+            onClick={() => setIsMobileOpen(false)}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.25rem' }}
+          >
+            <X size={24} />
+          </button>
+        )}
       </div>
 
       <div className="filter-section">

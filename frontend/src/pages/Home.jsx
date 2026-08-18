@@ -217,21 +217,21 @@ const Home = () => {
       </div>
 
       {/* Super Hour Deals */}
-      <div style={{ marginBottom: '5rem', background: 'var(--accent-primary)', borderRadius: '24px', padding: '3rem', color: 'white', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+      <div className="super-hour-container">
         <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '600px', height: '600px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', pointerEvents: 'none' }}></div>
         <div style={{ position: 'absolute', bottom: '-20%', left: '-5%', width: '300px', height: '300px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', pointerEvents: 'none' }}></div>
         
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '2rem', position: 'relative', zIndex: 1 }}>
           <div>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: '800', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <h2 className="super-hour-title">
               ⚡ সুপার আওয়ার ডিলস
             </h2>
-            <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.8)', margin: 0 }}>
+            <p className="super-hour-subtitle">
               সময় শেষ হওয়ার আগেই দারুণ সব অফারে আপনার পছন্দের পণ্যটি বুঝে নিন!
             </p>
           </div>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(0,0,0,0.2)', padding: '1rem 1.5rem', borderRadius: '16px', backdropFilter: 'blur(10px)' }}>
+          <div className="super-hour-timer-wrap">
             <span style={{ fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem', marginRight: '0.5rem' }}>Ends In:</span>
             <div style={{ display: 'flex', gap: '0.5rem', textAlign: 'center' }}>
               <div style={{ background: 'white', color: 'var(--accent-primary)', width: '50px', height: '50px', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
