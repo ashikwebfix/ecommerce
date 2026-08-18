@@ -64,6 +64,7 @@ export const trackPageView = (url) => {
 export const trackViewContent = (product) => {
   if (!product) return;
   const price = product.sellPrice || product.price || 0;
+  const productId = product.id || product._id;
   const eventId = generateEventId();
   
   // GTM
@@ -73,7 +74,7 @@ export const trackViewContent = (product) => {
     ecommerce: {
       items: [{
         item_name: product.name,
-        item_id: product.id,
+        item_id: productId,
         price: price,
         item_category: product.categoryId || '',
       }]
@@ -82,7 +83,7 @@ export const trackViewContent = (product) => {
 
   const fbData = {
     content_name: product.name,
-    content_ids: [product.id],
+    content_ids: [productId],
     content_type: 'product',
     value: price,
     currency: 'BDT'
@@ -96,6 +97,7 @@ export const trackViewContent = (product) => {
 export const trackAddToCart = (product, qty = 1) => {
   if (!product) return;
   const price = product.sellPrice || product.price || 0;
+  const productId = product.id || product._id;
   const eventId = generateEventId();
 
   // GTM
@@ -105,7 +107,7 @@ export const trackAddToCart = (product, qty = 1) => {
     ecommerce: {
       items: [{
         item_name: product.name,
-        item_id: product.id,
+        item_id: productId,
         price: price,
         quantity: qty
       }]
@@ -114,7 +116,7 @@ export const trackAddToCart = (product, qty = 1) => {
 
   const fbData = {
     content_name: product.name,
-    content_ids: [product.id],
+    content_ids: [productId],
     content_type: 'product',
     value: price * qty,
     currency: 'BDT'

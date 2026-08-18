@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import ProductCard from '../components/ProductCard';
 import ExpressCheckoutModal from '../components/ExpressCheckoutModal';
 import { Helmet } from 'react-helmet-async';
-import { trackViewContent, trackAddToCart } from '../utils/tracking';
+import { trackViewContent } from '../utils/tracking';
 
 const ProductDetails = () => {
   const { slug } = useParams();
@@ -116,7 +116,6 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart({ ...product, qty, selectedVariations });
-    trackAddToCart(product, qty);
     setIsAdded(true);
     toast.success('Added to cart');
     setTimeout(() => setIsAdded(false), 2000);
@@ -149,7 +148,6 @@ const ProductDetails = () => {
       name: `${product.name} (Bundle Deal)`
     };
     addToCart(discountedMainProduct, 1);
-    trackAddToCart(discountedMainProduct, 1);
     
     comboProducts.forEach(cp => {
       const pPrice = Number(cp.sellPrice || cp.price);

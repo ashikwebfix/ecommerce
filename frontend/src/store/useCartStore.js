@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { trackAddToCart } from '../utils/tracking';
 
 // Try to load cart from local storage on initial load
 const loadCartFromStorage = () => {
@@ -31,6 +32,12 @@ const useCartStore = create((set, get) => ({
 
     set({ cartItems: newCartItems });
     localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    
+    try {
+      trackAddToCart(product, qty);
+    } catch (err) {
+      console.error('Failed to track add to cart', err);
+    }
   },
 
   removeFromCart: (identifier) => {
