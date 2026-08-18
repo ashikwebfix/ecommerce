@@ -191,15 +191,37 @@ const ProductDetails = () => {
     }
   };
 
+  const stripHtml = (html) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html || '';
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  const getOgImage = () => {
+    const siteUrl = window.location.origin;
+    if (!mainImage || mainImage.includes('placehold.co')) {
+      return `${siteUrl}/logo.svg`;
+    }
+    if (mainImage.startsWith('http')) {
+      return mainImage;
+    }
+    return `${siteUrl}${mainImage.startsWith('/') ? '' : '/'}${mainImage}`;
+  };
+
+  const ogDesc = stripHtml(product.description).substring(0, 200) + (product.description?.length > 200 ? '...' : '');
+
   return (
-    <div className="container animate-fade-in" style={{ paddingBottom: '4rem' }}>
+    <div className="container" style={{ paddingBottom: '4rem' }}>
       <Helmet>
         <title>{product.name} | kinaboo.com</title>
-        <meta name="description" content={product.description} />
-        <meta property="og:title" content={product.name} />
-        <meta property="og:description" content={product.description} />
-        <meta property="og:image" content={mainImage} />
+        <meta name="description" content={ogDesc} />
+        <meta property="og:title" content={`${product.name} | kinaboo.com`} />
+        <meta property="og:description" content={ogDesc} />
+        <meta property="og:image" content={getOgImage()} />
+        <meta property="og:image:alt" content={product.name} />
         <meta property="og:type" content="product" />
+        <meta property="og:url" content={window.location.href} />
+        <meta name="twitter:card" content="summary_large_image" />
         <script type="application/ld+json">
           {JSON.stringify(productSchema)}
         </script>
