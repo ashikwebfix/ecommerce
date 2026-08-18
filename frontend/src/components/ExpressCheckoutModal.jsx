@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { trackBeginCheckout, trackPurchase } from '../utils/tracking';
 
 const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClose }) => {
   const navigate = useNavigate();
@@ -63,6 +64,18 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
     };
     fetchDeliveryMethods();
   }, []);
+
+  // Track InitiateCheckout when modal opens
+  useEffect(() => {
+    const price = product.sellPrice || product.price;
+    trackBeginCheckout([{
+      id: product.id,
+      name: product.name,
+      qty,
+      price,
+      selectedVariations
+    }], price * qty);
+  }, [product, qty, selectedVariations]);
 
   const handleApplyCoupon = async () => {
     if (!couponInput) return;
@@ -146,6 +159,16 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
       });
 
       if (res.ok) {
+        const responseData = await res.json();
+        // Track Purchase
+        trackPurchase(responseData, [{
+          id: product.id,
+          name: product.name,
+          qty,
+          price: product.sellPrice || product.price,
+          selectedVariations
+        }]);
+
         alert('Order placed successfully! We will contact you soon.');
         onClose();
         if (userInfo) navigate('/profile');

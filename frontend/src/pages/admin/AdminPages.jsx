@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, CheckCircle, XCircle, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, Edit, Trash2, CheckCircle, XCircle, ArrowUp, ArrowDown, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
 import JoditEditor from 'jodit-react';
 
@@ -448,8 +448,11 @@ const AdminPages = () => {
                     {page.isActive ? <CheckCircle size={18} color="var(--accent-primary)" /> : <XCircle size={18} color="var(--text-secondary)" />}
                   </td>
                   <td style={{ padding: '1rem', textAlign: 'right' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                      <button onClick={() => handleEdit(page)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-primary)' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                      <a href={`/pages/${page.slug}`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', color: 'var(--text-secondary)', textDecoration: 'none' }} title="View Page">
+                        <Eye size={18} />
+                      </a>
+                      <button onClick={() => handleEdit(page)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-primary)' }} title="Edit Page">
                         <Edit size={18} />
                       </button>
                       <button onClick={() => handleDelete(page.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>

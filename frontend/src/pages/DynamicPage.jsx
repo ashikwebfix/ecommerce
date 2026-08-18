@@ -105,6 +105,103 @@ const RichTextSection = ({ data }) => {
   );
 };
 
+const FaqSection = ({ data }) => {
+  const [openIdx, setOpenIdx] = useState(null);
+  const faqs = data.faqs || [];
+  
+  if (faqs.length === 0) return null;
+  return (
+    <div style={{ margin: '3rem 0' }}>
+      {data.title && <h2 className="heading-lg" style={{ marginBottom: '2rem', textAlign: 'center' }}>{data.title}</h2>}
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        {faqs.map((faq, idx) => (
+          <div key={idx} style={{ marginBottom: '1rem', border: '1px solid var(--border-color)', borderRadius: '8px', overflow: 'hidden' }}>
+            <button 
+              onClick={() => setOpenIdx(openIdx === idx ? null : idx)}
+              style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: openIdx === idx ? '#f8fafc' : '#fff', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: '600', fontSize: '1.05rem', color: 'var(--text-primary)' }}
+            >
+              {faq.question}
+              <ChevronDown size={20} style={{ transform: openIdx === idx ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />
+            </button>
+            {openIdx === idx && (
+              <div style={{ padding: '0 1.25rem 1.25rem', background: '#f8fafc', color: 'var(--text-secondary)', lineHeight: '1.6' }}>
+                {faq.answer}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ContactFormSection = ({ data }) => {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', margin: '3rem 0' }}>
+      <div>
+        <h2 className="heading-lg" style={{ marginBottom: '1.5rem' }}>{data.title || 'যোগাযোগ করুন'}</h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+          {data.subtitle || 'যেকোনো প্রয়োজনে আমাদের সাথে যোগাযোগ করুন। আমাদের সাপোর্ট টিম সবসময় প্রস্তুত আপনাকে সাহায্য করতে।'}
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+            <div style={{ background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', padding: '1rem', borderRadius: '50%' }}>
+              <MapPin size={24} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>অফিসের ঠিকানা</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>{data.address || 'বাড়ী নং ১২, রোড নং ৫, ধানমন্ডি, ঢাকা-১২০৯'}</p>
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+            <div style={{ background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', padding: '1rem', borderRadius: '50%' }}>
+              <Phone size={24} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>ফোন নাম্বার</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>{data.phone || '+880 1712 345 678'}</p>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>{data.phone2 || '+880 1912 345 678'}</p>
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+            <div style={{ background: 'rgba(6, 78, 59, 0.1)', color: 'var(--accent-primary)', padding: '1rem', borderRadius: '50%' }}>
+              <Mail size={24} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>ইমেইল</h3>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: '1.5' }}>{data.email || 'support@kinaboo.com'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style={{ background: '#fff', padding: '2.5rem', borderRadius: '16px', border: '1px solid var(--border-color)', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
+        <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: 'var(--text-primary)' }}>মেসেজ পাঠান</h3>
+        <form onSubmit={(e) => { e.preventDefault(); alert('Message Sent!'); }}>
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' }}>আপনার নাম</label>
+            <input type="text" className="input-field" placeholder="নাম লিখুন" required />
+          </div>
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' }}>ইমেইল অথবা ফোন</label>
+            <input type="text" className="input-field" placeholder="ইমেইল বা ফোন নাম্বার" required />
+          </div>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-primary)' }}>মেসেজ</label>
+            <textarea className="input-field" rows="4" placeholder="আপনার মেসেজ লিখুন..." required style={{ resize: 'vertical' }}></textarea>
+          </div>
+          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1.1rem' }}>
+            সেন্ড করুন
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 // --- Main Page Component ---
 
 const DynamicPage = () => {
@@ -178,7 +275,7 @@ const DynamicPage = () => {
                 case 'contact_form':
                   return <ContactFormSection key={section.id || index} data={section.data} />;
                 case 'about_hero':
-                  return <AboutHeroSection key={section.id || index} data={section.data} />;
+                  return <FullAboutSection key={section.id || index} data={section.data} />;
                 default:
                   return null;
               }

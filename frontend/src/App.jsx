@@ -63,9 +63,9 @@ function App() {
         const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:6710') + '/api/settings/general_settings');
         if (res.ok) {
           const data = await res.json();
-          if (data && data.value && data.value.maintenanceMode) {
+          if (data && data.maintenanceMode) {
             setMaintenanceMode(true);
-            setMaintenanceMessage(data.value.maintenanceMessage);
+            setMaintenanceMessage(data.maintenanceMessage);
           }
         }
       } catch (err) {
@@ -122,7 +122,7 @@ function App() {
           <Route path="pages" element={<AdminPages />} />
         </Route>
       </Routes>
-      <MobileBottomNav />
+      {(!maintenanceMode || isAdmin) && <MobileBottomNav />}
     </Router>
     </HelmetProvider>
   );

@@ -39,17 +39,13 @@ export const pushToDataLayer = (data) => {
 export const pushToFbq = (event, eventName, data, eventId) => {
   if (typeof window !== 'undefined' && window.fbq) {
     const options = eventId ? { eventID: eventId } : undefined;
-    if (data) {
-      window.fbq(event, eventName, data, options);
-    } else {
-      window.fbq(event, eventName, undefined, options);
-    }
+    window.fbq(event, eventName, data || {}, options);
   }
 };
 
 export const trackPageView = (url) => {
   const eventId = generateEventId();
-  pushToDataLayer({ event: 'page_view', page_path: url });
+  pushToDataLayer({ event: 'page_view', page_path: url, event_id: eventId });
   pushToFbq('track', 'PageView', undefined, eventId);
   sendCAPI('PageView', { page_path: url }, eventId);
 };
@@ -62,6 +58,7 @@ export const trackViewContent = (product) => {
   // GTM
   pushToDataLayer({
     event: 'view_item',
+    event_id: eventId,
     ecommerce: {
       items: [{
         item_name: product.name,
@@ -93,6 +90,7 @@ export const trackAddToCart = (product, qty = 1) => {
   // GTM
   pushToDataLayer({
     event: 'add_to_cart',
+    event_id: eventId,
     ecommerce: {
       items: [{
         item_name: product.name,
@@ -124,6 +122,7 @@ export const trackAddToWishlist = (product) => {
   // GTM
   pushToDataLayer({
     event: 'add_to_wishlist',
+    event_id: eventId,
     ecommerce: {
       items: [{
         item_name: product.name,
@@ -153,6 +152,7 @@ export const trackBeginCheckout = (cartItems, totalPrice) => {
   // GTM
   pushToDataLayer({
     event: 'begin_checkout',
+    event_id: eventId,
     ecommerce: {
       value: totalPrice,
       currency: 'BDT',
@@ -185,6 +185,7 @@ export const trackSearch = (query) => {
   // GTM
   pushToDataLayer({
     event: 'search',
+    event_id: eventId,
     search_term: query
   });
 
@@ -206,6 +207,7 @@ export const trackPurchase = (order, cartItems) => {
   // GTM
   pushToDataLayer({
     event: 'purchase',
+    event_id: eventId,
     ecommerce: {
       transaction_id: order.id,
       value: order.totalPrice,

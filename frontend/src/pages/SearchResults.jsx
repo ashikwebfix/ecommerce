@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import ProductFilterSidebar from '../components/ProductFilterSidebar';
 import { ChevronRight, Filter, ChevronLeft, Loader } from 'lucide-react';
+import { trackSearch } from '../utils/tracking';
 
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
@@ -30,6 +31,7 @@ const SearchResults = () => {
         if (res.ok) {
           const data = await res.json();
           setProducts(data);
+          if (query) trackSearch(query);
         }
       } catch (error) {
         console.error("Error fetching search results:", error);
