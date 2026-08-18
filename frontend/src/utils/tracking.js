@@ -117,6 +117,7 @@ export const trackAddToCart = (product, qty = 1) => {
 export const trackAddToWishlist = (product) => {
   if (!product) return;
   const price = product.sellPrice || product.price || 0;
+  const productId = product.id || product._id;
   const eventId = generateEventId();
 
   // GTM
@@ -126,7 +127,7 @@ export const trackAddToWishlist = (product) => {
     ecommerce: {
       items: [{
         item_name: product.name,
-        item_id: product.id,
+        item_id: productId,
         price: price
       }]
     }
@@ -134,7 +135,7 @@ export const trackAddToWishlist = (product) => {
 
   const fbData = {
     content_name: product.name,
-    content_ids: [product.id],
+    content_ids: [productId],
     content_type: 'product',
     value: price,
     currency: 'BDT'
