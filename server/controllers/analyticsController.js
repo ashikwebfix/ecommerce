@@ -225,7 +225,7 @@ const Setting = require('../models/Setting'); // Need Setting to fetch tracking 
 
 const sendCAPIEvent = async (req, res) => {
   try {
-    const { eventName, eventData, eventId, eventSourceUrl, clientIp, userAgent } = req.body;
+    const { eventName, eventData, eventId, eventSourceUrl, clientIp, userAgent, fbp, fbc } = req.body;
     
     // Fetch tracking settings
     const trackingSetting = await Setting.findOne({ where: { key: 'tracking_settings' } });
@@ -255,7 +255,9 @@ const sendCAPIEvent = async (req, res) => {
           action_source: 'website',
           user_data: {
             client_ip_address: finalClientIp,
-            client_user_agent: userAgent || req.headers['user-agent']
+            client_user_agent: userAgent || req.headers['user-agent'],
+            ...(fbp && { fbp }),
+            ...(fbc && { fbc })
           },
           custom_data: eventData
         }

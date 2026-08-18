@@ -7,6 +7,14 @@ const generateEventId = () => {
   return 'evt_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
 };
 
+const getCookie = (name) => {
+  if (typeof document === 'undefined') return undefined;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return undefined;
+};
+
 const sendCAPI = async (eventName, eventData, eventId) => {
   try {
     const apiUrl = import.meta.env.VITE_API_URL || '';
@@ -20,7 +28,9 @@ const sendCAPI = async (eventName, eventData, eventId) => {
         eventData,
         eventId,
         eventSourceUrl: window.location.href,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        fbp: getCookie('_fbp'),
+        fbc: getCookie('_fbc')
       })
     });
   } catch (error) {
