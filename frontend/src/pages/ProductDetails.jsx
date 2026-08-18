@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ShieldCheck, Truck, RotateCcw, Star, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { ShieldCheck, Truck, RotateCcw, Star, ChevronDown, ChevronUp, X, Lock, HeadphonesIcon } from 'lucide-react';
 import useCartStore from '../store/useCartStore';
 import toast from 'react-hot-toast';
 import ProductCard from '../components/ProductCard';
@@ -440,17 +440,34 @@ const ProductDetails = () => {
             </div>
           )}
 
-          {/* CRO Trust Area Image Badge */}
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              নিরাপদ চেকআউট গ্যারান্টি
+          {/* CRO Trust Area fully redesigned */}
+          <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.5rem' }}>
+                <div style={{ background: '#fff', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                  <Lock size={22} color="var(--accent-primary)" />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>নিরাপদ পেমেন্ট</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.5rem' }}>
+                <div style={{ background: '#fff', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                  <Truck size={22} color="var(--accent-primary)" />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>দ্রুত ডেলিভারি</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.5rem' }}>
+                <div style={{ background: '#fff', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                  <RotateCcw size={22} color="var(--accent-primary)" />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>রিটার্ন পলিসি</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.5rem' }}>
+                <div style={{ background: '#fff', padding: '0.75rem', borderRadius: '50%', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' }}>
+                  <HeadphonesIcon size={22} color="var(--accent-primary)" />
+                </div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>২৪/৭ সাপোর্ট</span>
+              </div>
             </div>
-            {/* Using a reliable placeholder for trust badges. You can replace the src with your own image url later. */}
-            <img 
-              src="https://www.pngmart.com/files/7/Trust-Badge-PNG-File.png" 
-              alt="Trust Badges" 
-              style={{ width: '100%', maxWidth: '350px', display: 'inline-block' }} 
-            />
           </div>
         </div>
       </div>
