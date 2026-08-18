@@ -321,7 +321,7 @@ const Profile = () => {
                   <p className="text-muted" style={{ margin: 0 }}>Save items you love to easily find them later.</p>
                 </div>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '1rem' }}>
+                <div className="profile-favorites-grid">
                   {favorites.map(product => (
                     <ProductCard key={product.id || product._id} product={product} />
                   ))}

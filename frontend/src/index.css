@@ -615,3 +615,22 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* Profile Favorites Grid */
+.profile-favorites-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .profile-favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
