@@ -64,13 +64,13 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { name, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, tags, status } = req.body;
+    const { name, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, imageTextSections, tags, status } = req.body;
     
     const baseSlug = generateSlug(name);
     const slug = await ensureUniqueSlug(baseSlug);
     
     const product = await Product.create({
-      name, slug, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, tags, status
+      name, slug, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, imageTextSections, tags, status
     });
     res.status(201).json(product);
   } catch (error) {
@@ -79,7 +79,7 @@ const createProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-  const { name, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, tags, status } = req.body;
+  const { name, sku, price, sellPrice, description, longDescription, image, images, category, stock, allowSellWithoutStock, keypoints, variations, faq, imageTextSections, tags, status } = req.body;
   const product = await Product.findByPk(req.params.id);
 
   if (product) {
@@ -103,6 +103,7 @@ const updateProduct = async (req, res) => {
     product.keypoints = keypoints || product.keypoints;
     product.variations = variations || product.variations;
     product.faq = faq || product.faq;
+    product.imageTextSections = imageTextSections || product.imageTextSections;
     product.tags = tags || product.tags;
     product.status = status || product.status;
 
@@ -140,6 +141,41 @@ const migrateProductSlugs = async () => {
   }
 };
 
+const bulkDeleteProducts = async (req, res) => {
+  const { ids } = req.body;
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ message: 'No product IDs provided' });
+  }
+
+  try {
+    await Product.destroy({
+      where: {
+        id: ids
+      }
+    });
+    res.json({ message: 'Products deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const bulkUpdateStatus = async (req, res) => {
+  const { ids, status } = req.body;
+  if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ message: 'No product IDs provided' });
+  }
+
+  try {
+    await Product.update(
+      { status },
+      { where: { id: ids } }
+    );
+    res.json({ message: 'Product statuses updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getProducts,
   getAdminProducts,
@@ -147,5 +183,7 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  migrateProductSlugs
+  migrateProductSlugs,
+  bulkDeleteProducts,
+  bulkUpdateStatus
 };
