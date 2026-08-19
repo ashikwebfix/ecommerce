@@ -14,6 +14,9 @@ const getMedia = (req, res) => {
   const directoryPath = path.join(__dirname, '../uploads');
   fs.readdir(directoryPath, (err, files) => {
     if (err) {
+      if (err.code === 'ENOENT') {
+        return res.json([]);
+      }
       return res.status(500).json({ message: 'Unable to scan files' });
     }
     const fileUrls = files.filter(f => !f.startsWith('.')).map(file => ({

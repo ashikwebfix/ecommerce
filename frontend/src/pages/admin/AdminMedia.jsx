@@ -22,9 +22,10 @@ const AdminMedia = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      setMedia(data);
+      setMedia(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching media:", error);
+      setMedia([]);
     } finally {
       setLoading(false);
     }

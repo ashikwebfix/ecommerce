@@ -32,9 +32,10 @@ const MediaPickerModal = ({ isOpen, onClose, onSelect, multiSelect = false, curr
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      setMedia(data);
+      setMedia(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching media:", error);
+      setMedia([]);
     } finally {
       setLoading(false);
     }
