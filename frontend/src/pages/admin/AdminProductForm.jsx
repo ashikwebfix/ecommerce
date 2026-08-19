@@ -17,6 +17,7 @@ const AdminProductForm = () => {
 
   // Form State
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [sku, setSku] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
@@ -60,6 +61,7 @@ const AdminProductForm = () => {
       const product = await res.json();
       
       setName(product.name);
+      setDescription(product.description || '');
       setSku(product.sku || '');
       setCategory(product.category);
       setPrice(product.price);
@@ -86,7 +88,7 @@ const AdminProductForm = () => {
     e.preventDefault();
     
     const parsedData = {
-      name, sku, category, price: Number(price), stock: Number(stock), allowSellWithoutStock, image, images, variations, faq, longDescription, imageTextSections, tags, status,
+      name, sku, category, price: Number(price), stock: Number(stock), allowSellWithoutStock, image, images, variations, faq, description, longDescription, imageTextSections, tags, status,
       sellPrice: sellPrice ? Number(sellPrice) : null,
       keypoints: keypoints.split(',').map(s => s.trim()).filter(Boolean)
     };
@@ -235,6 +237,11 @@ const AdminProductForm = () => {
                   <label style={{display:'block',marginBottom:'.5rem',fontWeight:600}}>SKU (Optional)</label>
                   <input className="input-field" value={sku} onChange={e => setSku(e.target.value)} placeholder="e.g. PROD-123" />
                 </div>
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{display:'block',marginBottom:'.5rem',fontWeight:600}}>Short Description</label>
+                <textarea required className="input-field" rows="3" value={description} onChange={e => setDescription(e.target.value)}></textarea>
               </div>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
