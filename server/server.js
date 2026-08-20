@@ -50,7 +50,7 @@ app.use('/api/abandoned-carts', abandonedCartRoutes);
 app.use('/api/pages', pageRoutes);
 
 // API Fallback (Optional - send 404 for unknown API routes)
-app.use('/api/*', (req, res) => {
+app.use('/api', (req, res) => {
   res.status(404).json({ message: 'API Route Not Found' });
 });
 
