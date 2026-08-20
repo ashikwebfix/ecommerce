@@ -3,6 +3,27 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const { connectDB } = require('./config/db');
+
+// Mock browser globals for SSR using JSDOM
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<!DOCTYPE html><html><head></head><body><div id="root"></div></body></html>', { url: 'http://localhost:6710/' });
+const win = dom.window;
+
+for (const key of Object.getOwnPropertyNames(win)) {
+  if (typeof global[key] === 'undefined') {
+    global[key] = win[key];
+  }
+}
+
+global.window = win;
+global.document = win.document;
+global.navigator = win.navigator;
+global.location = win.location;
+global.localStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {}
+};
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
@@ -55,7 +76,7 @@ app.use('/api', (req, res) => {
 });
 
 // Serve frontend static files
-const frontendDistPath = path.join(__dirname, '../frontend/dist');
+const frontendDistPath = path.join(__dirname, '../frontend/dist/client');
 app.use(express.static(frontendDistPath, { index: false }));
 
 // Catch-all route for SPA and SEO injection
@@ -97,6 +118,18 @@ app.use(async (req, res) => {
     <meta name="twitter:card" content="summary_large_image" />`;
 
     html = html.replace('<title>পছন্দের পণ্য বেছে নিন | kinaboo.com</title>', ogTags);
+    
+    // SSR Rendering
+    try {
+      const renderModulePath = path.join(__dirname, '../frontend/dist/server/entry-server.js');
+      const { render } = await import('file://' + renderModulePath);
+      const { html: appHtml } = render(req.originalUrl);
+      html = html.replace('<!--app-html-->', appHtml);
+    } catch (ssrError) {
+      console.error('SSR Error:', ssrError);
+      // fallback to CSR
+    }
+
     res.send(html);
   } catch (error) {
     console.error('Error rendering page:', error);

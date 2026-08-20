@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/Navbar';
@@ -80,7 +80,6 @@ function App() {
 
   return (
     <HelmetProvider>
-      <Router>
         <ScrollToTop />
         <Tracker />
         <TrackingInjector />
@@ -123,7 +122,6 @@ function App() {
         </Route>
       </Routes>
       {(!maintenanceMode || isAdmin) && <MobileBottomNav />}
-    </Router>
     </HelmetProvider>
   );
 }

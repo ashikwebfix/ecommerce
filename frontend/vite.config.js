@@ -50,6 +50,9 @@ const seoPlugin = () => {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), seoPlugin()],
+  ssr: {
+    noExternal: ['jodit-react', 'jodit', 'leaflet', 'react-leaflet', 'react-quill-new']
+  },
   server: {
     port: 6711,
     strictPort: true,
