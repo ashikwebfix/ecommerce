@@ -124,7 +124,13 @@ const Home = () => {
     <div className="container animate-fade-in" style={{ paddingTop: '2rem' }}>
       <Helmet>
         <title>Home | kinaboo.com</title>
-        <meta name="description" content="Shop the latest trends and premium quality products at our eCommerce store. Free shipping and secure checkout." />
+        <meta name="description" content="পছন্দের পণ্য বেছে নিন, হাতে পেয়ে টাকা দিন।" />
+        <meta property="og:title" content="Home | kinaboo.com" />
+        <meta property="og:description" content="পছন্দের পণ্য বেছে নিন, হাতে পেয়ে টাকা দিন।" />
+        <meta property="og:image" content={`${window.location.origin}/favicon.svg`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       
       {/* Hero Section */}

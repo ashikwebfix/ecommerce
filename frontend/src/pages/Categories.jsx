@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight, Search, Loader } from 'lucide-react';
 import ProductFilterSidebar from '../components/ProductFilterSidebar';
+import { Helmet } from 'react-helmet-async';
 
 const Categories = () => {
   const [products, setProducts] = useState([]);
@@ -70,6 +71,16 @@ const Categories = () => {
 
   return (
     <div className="container animate-fade-in" style={{ padding: '2rem 2rem 5rem' }}>
+      <Helmet>
+        <title>Categories | kinaboo.com</title>
+        <meta name="description" content="Explore our wide range of product categories." />
+        <meta property="og:title" content="Categories | kinaboo.com" />
+        <meta property="og:description" content="Explore our wide range of product categories." />
+        <meta property="og:image" content={`${window.location.origin}/favicon.svg`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
