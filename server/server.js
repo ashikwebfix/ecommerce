@@ -51,7 +51,13 @@ connectDB().then(() => {
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow all origins
+    callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve static files from the uploads folder
