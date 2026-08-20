@@ -23,7 +23,11 @@ const Login = () => {
       
       if (res.ok) {
         localStorage.setItem('userInfo', JSON.stringify(data));
-        navigate('/profile');
+        if (data.isAdmin || data.role === 'superadmin' || data.role === 'admin' || data.role === 'shopmanager') {
+          navigate('/admin');
+        } else {
+          navigate('/profile');
+        }
       } else {
         setError(data.message || 'Invalid credentials');
       }
