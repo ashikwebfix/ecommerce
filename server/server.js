@@ -54,10 +54,59 @@ app.use('/api', (req, res) => {
   res.status(404).json({ message: 'API Route Not Found' });
 });
 
-// Since we migrated to Next.js, the Express server acts purely as an API server.
-// The Next.js frontend will handle routing and SEO metadata.
-app.get('/', (req, res) => {
-  res.send('API is running...');
+// Serve frontend static files
+const frontendDistPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDistPath, { index: false }));
+
+// Catch-all route for SPA and SEO injection
+app.use(async (req, res) => {
+  try {
+    let html = fs.readFileSync(path.join(frontendDistPath, 'index.html'), 'utf-8');
+    const currentPath = req.path;
+    
+    let title = "পছন্দের পণ্য বেছে নিন | kinaboo.com";
+    let description = "পছন্দের পণ্য বেছে নিন, হাতে পেয়ে টাকা দিন।";
+    let image = `${process.env.SITE_URL || 'http://localhost:6711'}/favicon.svg`;
+
+    if (currentPath.startsWith('/product/')) {
+      const slug = currentPath.split('/')[2];
+      const product = await Product.findOne({ where: { slug } });
+      
+      if (product) {
+        title = `${product.name} | kinaboo.com`;
+        const stripHtml = (html) => html ? html.replace(/<[^>]*>?/gm, '') : '';
+        const cleanDesc = stripHtml(product.description || product.longDescription);
+        description = cleanDesc.length > 200 ? cleanDesc.substring(0, 200) + '...' : cleanDesc;
+        
+        let pImage = product.image;
+        if (product.images && product.images.length > 0 && !pImage) pImage = product.images[0];
+        if (pImage) image = pImage.startsWith('http') ? pImage : `${process.env.SITE_URL || 'http://localhost:6710'}${pImage.startsWith('/') ? '' : '/'}${pImage}`;
+      }
+    } else if (currentPath === '/categories') {
+      title = "Categories | kinaboo.com";
+      description = "Explore our wide range of product categories.";
+    }
+
+    const ogTags = `
+    <title>${title}</title>
+    <meta name="description" content="${description}" />
+    <meta property="og:title" content="${title}" />
+    <meta property="og:description" content="${description}" />
+    <meta property="og:image" content="${image}" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />`;
+
+    html = html.replace('<title>পছন্দের পণ্য বেছে নিন | kinaboo.com</title>', ogTags);
+    res.send(html);
+  } catch (error) {
+    console.error('Error rendering page:', error);
+    // Fallback to basic HTML if there is an error
+    try {
+        res.send(fs.readFileSync(path.join(frontendDistPath, 'index.html'), 'utf-8'));
+    } catch(e) {
+        res.status(500).send('Server Error');
+    }
+  }
 });
 
 const PORT = process.env.PORT || 5005;
