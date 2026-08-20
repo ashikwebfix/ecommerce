@@ -4,14 +4,15 @@ import react from '@vitejs/plugin-react'
 const seoPlugin = () => {
   return {
     name: 'seo-plugin',
-    async transformIndexHtml(html, { path }) {
+    async transformIndexHtml(html, ctx) {
+      const currentPath = ctx.originalUrl || ctx.path;
       let title = "Home | kinaboo.com";
       let description = "পছন্দের পণ্য বেছে নিন, হাতে পেয়ে টাকা দিন।";
       let image = "http://localhost:6711/favicon.svg";
 
       try {
-        if (path.startsWith('/product/')) {
-          const slug = path.split('/')[2];
+        if (currentPath.startsWith('/product/')) {
+          const slug = currentPath.split('/')[2];
           const res = await fetch(`http://127.0.0.1:6710/api/products/${slug}`);
           if (res.ok) {
             const product = await res.json();
@@ -24,7 +25,7 @@ const seoPlugin = () => {
             if (product.images && product.images.length > 0) pImage = product.images[0];
             if (pImage) image = pImage.startsWith('http') ? pImage : `http://127.0.0.1:6710${pImage.startsWith('/') ? '' : '/'}${pImage}`;
           }
-        } else if (path === '/categories') {
+        } else if (currentPath === '/categories') {
           title = "Categories | kinaboo.com";
           description = "Explore our wide range of product categories.";
         }
