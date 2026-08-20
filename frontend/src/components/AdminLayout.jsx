@@ -5,6 +5,11 @@ import { LayoutDashboard, PackageSearch, Layers, Image as ImageIcon, Users, Shop
 const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
@@ -58,6 +63,8 @@ const AdminLayout = () => {
   const toggleMenu = (name) => {
     setOpenMenus(prev => ({ ...prev, [name]: !prev[name] }));
   };
+
+  if (!mounted) return null;
 
   return (
     <div className="admin-layout">

@@ -128,7 +128,9 @@ app.use(async (req, res) => {
     // SSR Rendering
     try {
       const renderModulePath = path.join(__dirname, '../frontend/dist/server/entry-server.js');
-      const { render } = await import('file://' + renderModulePath);
+      // Add cache buster for development so it picks up new builds without restarting Node
+      const cacheBuster = process.env.NODE_ENV === 'production' ? '' : `?update=${Date.now()}`;
+      const { render } = await import(`file://${renderModulePath}${cacheBuster}`);
       const { html: appHtml } = render(req.originalUrl);
       html = html.replace('<!--app-html-->', appHtml);
     } catch (ssrError) {

@@ -83,6 +83,10 @@ const Product = sequelize.define('Product', {
     allowNull: false,
     defaultValue: 'published', // 'published' or 'draft'
   },
+  volumeBundles: {
+    type: DataTypes.JSON,
+    allowNull: true,
+  },
 });
 
 module.exports = Product;

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { HelmetProvider } from 'react-helmet-async';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MobileBottomNav from './components/MobileBottomNav';
 import TrackingInjector from './components/TrackingInjector';
 import ScrollToTop from './components/ScrollToTop';
+import SideCart from './components/SideCart';
 import Home from './pages/Home';
 import Shop from './pages/Shop';
 import Categories from './pages/Categories';
@@ -49,6 +50,7 @@ const CustomerLayout = ({ children, maintenanceMode, maintenanceMessage, isAdmin
       <Navbar />
       <div className="page-wrapper">{children}</div>
       <Footer />
+      <SideCart />
     </>
   );
 };
@@ -56,8 +58,10 @@ const CustomerLayout = ({ children, maintenanceMode, maintenanceMessage, isAdmin
 function App() {
   const [maintenanceMode, setMaintenanceMode] = React.useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = React.useState('');
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
+    setMounted(true);
     const fetchMaintenance = async () => {
       try {
         const res = await fetch((import.meta.env.VITE_API_URL || 'http://localhost:6710') + '/api/settings/general_settings');
@@ -79,11 +83,11 @@ function App() {
   const isAdmin = userInfo?.isAdmin || userInfo?.role === 'superadmin' || userInfo?.role === 'admin';
 
   return (
-    <HelmetProvider>
+    <>
         <ScrollToTop />
         <Tracker />
         <TrackingInjector />
-        <Toaster position="top-right" />
+        {mounted && <Toaster position="top-right" />}
         <Routes>
         {/* Customer Routes */}
         <Route path="/" element={<CustomerLayout maintenanceMode={maintenanceMode} maintenanceMessage={maintenanceMessage} isAdmin={isAdmin}><Home /></CustomerLayout>} />
@@ -122,7 +126,7 @@ function App() {
         </Route>
       </Routes>
       {(!maintenanceMode || isAdmin) && <MobileBottomNav />}
-    </HelmetProvider>
+    </>
   );
 }
 

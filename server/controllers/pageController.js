@@ -101,7 +101,7 @@ const deletePage = async (req, res) => {
 const seedDefaultPages = async () => {
   try {
     // Drop table to re-run seed because schema changed. In production we would migrate, but here we can force it since they were just dummy data
-    await Page.sync({ alter: true });
+    await Page.sync();
     
     const count = await Page.count();
     if (count === 0) {

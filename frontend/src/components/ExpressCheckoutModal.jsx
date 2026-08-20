@@ -118,7 +118,20 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
     setIsSubmitting(true);
     try {
       const selectedMethod = deliveryMethods.find(m => m.id === selectedMethodId);
-      const subtotal = (product.sellPrice || product.price) * qty;
+      let bundleDiscountTotal = 0;
+      if (product.volumeBundles && product.volumeBundles.length > 0) {
+        const sortedTiers = [...product.volumeBundles].sort((a, b) => b.qty - a.qty);
+        const appliedTier = sortedTiers.find(t => qty >= t.qty);
+        if (appliedTier) {
+          const basePrice = Number(product.sellPrice || product.price);
+          if (appliedTier.discountType === 'percentage') {
+            bundleDiscountTotal = ((basePrice * appliedTier.discountValue) / 100) * qty;
+          } else {
+            bundleDiscountTotal = (appliedTier.discountValue / appliedTier.qty) * qty;
+          }
+        }
+      }
+      const subtotal = ((product.sellPrice || product.price) * qty) - bundleDiscountTotal;
       let discount = 0;
       if (appliedCoupon) {
         discount = appliedCoupon.discountType === 'fixed' 
@@ -142,7 +155,7 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
         orderItems: [{
           productId: product.id,
           qty: qty,
-          price: product.sellPrice || product.price,
+          price: (product.sellPrice || product.price) - (bundleDiscountTotal / qty),
           selectedVariations
         }]
       };
@@ -186,8 +199,22 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
 
   if (!product) return null;
 
-  const mainImage = product.images && product.images.length > 0 ? product.images[0] : (product.image || 'https://via.placeholder.com/80');
-  const subtotal = (product.sellPrice || product.price) * qty;
+  const mainImage = product.images && product.images.length > 0 ? product.images[0] : (product.image || 'https://placehold.co/80x80?text=No+Image');
+  let bundleDiscountTotal = 0;
+  if (product.volumeBundles && product.volumeBundles.length > 0) {
+    const sortedTiers = [...product.volumeBundles].sort((a, b) => b.qty - a.qty);
+    const appliedTier = sortedTiers.find(t => qty >= t.qty);
+    if (appliedTier) {
+      const basePrice = Number(product.sellPrice || product.price);
+      if (appliedTier.discountType === 'percentage') {
+        bundleDiscountTotal = ((basePrice * appliedTier.discountValue) / 100) * qty;
+      } else {
+        bundleDiscountTotal = (appliedTier.discountValue / appliedTier.qty) * qty;
+      }
+    }
+  }
+  const originalSubtotal = (product.sellPrice || product.price) * qty;
+  const subtotal = originalSubtotal - bundleDiscountTotal;
   let discountDisplay = 0;
   if (appliedCoupon) {
     discountDisplay = appliedCoupon.discountType === 'fixed' 
@@ -217,6 +244,9 @@ const ExpressCheckoutModal = ({ product, qty = 1, selectedVariations = {}, onClo
           <div style={{ flex: 1 }}>
             <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.25rem' }}>{product.name}</div>
             <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>Qty: {qty}</div>
+            {bundleDiscountTotal > 0 && (
+              <div style={{ color: '#166534', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.25rem' }}>Combo Discount Applied: -{bundleDiscountTotal.toFixed(2)} BDT</div>
+            )}
             <div style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1.1rem' }}>
               {subtotal.toFixed(2)} BDT
             </div>

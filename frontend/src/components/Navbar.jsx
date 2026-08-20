@@ -8,8 +8,10 @@ const Navbar = () => {
   const cartItems = useCartStore((state) => state.cartItems);
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const favorites = useFavoritesStore((state) => state.favorites);
+  const setIsCartOpen = useCartStore((state) => state.setIsCartOpen);
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null');
   
+  const [mounted, setMounted] = useState(false);
   const [menuItems, setMenuItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [liveResults, setLiveResults] = useState([]);
@@ -20,6 +22,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setMounted(true);
     const fetchMenu = async () => {
       try {
         const res = await fetch(import.meta.env.VITE_API_URL + '/api/settings/header_menu');
@@ -67,6 +70,8 @@ const Navbar = () => {
     }
   };
 
+  if (!mounted) return null;
+
   return (
     <nav className="navbar" style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-color)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '2rem' }}>
@@ -104,7 +109,7 @@ const Navbar = () => {
                       onMouseOver={e => e.currentTarget.style.background = '#f8fafc'}
                       onMouseOut={e => e.currentTarget.style.background = 'transparent'}
                     >
-                      <img src={product.image || product.images?.[0] || 'https://via.placeholder.com/50'} alt={product.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
+                      <img src={product.image || product.images?.[0] || 'https://placehold.co/50x50?text=No+Image'} alt={product.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
                       <div style={{ flex: 1, overflow: 'hidden' }}>
                         <div style={{ fontWeight: '500', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.name}</div>
                         <div style={{ color: 'var(--accent-primary)', fontSize: '0.85rem', fontWeight: '600' }}>${Number(product.sellPrice || product.price).toFixed(2)}</div>
@@ -172,7 +177,7 @@ const Navbar = () => {
             </Link>
             
             {/* Cart */}
-            <Link to="/cart" className="nav-link" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', position: 'relative' }} title="Cart">
+            <button onClick={() => setIsCartOpen(true)} className="nav-link" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', position: 'relative', background: 'none', border: 'none', cursor: 'pointer' }} title="Cart">
               <Icons.ShoppingCart size={22} />
               {cartItemCount > 0 && (
                 <span style={{
@@ -182,7 +187,7 @@ const Navbar = () => {
                   {cartItemCount}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -242,7 +247,7 @@ const Navbar = () => {
               )}
             </Link>
 
-            <Link to="/cart" className="nav-link" onClick={() => setIsMobileMenuOpen(false)} style={{ position: 'relative' }} title="Cart">
+            <button onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }} className="nav-link" style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer' }} title="Cart">
               <Icons.ShoppingCart size={28} />
               {cartItemCount > 0 && (
                 <span style={{
@@ -252,7 +257,7 @@ const Navbar = () => {
                   {cartItemCount}
                 </span>
               )}
-            </Link>
+            </button>
           </div>
         </div>
     </nav>

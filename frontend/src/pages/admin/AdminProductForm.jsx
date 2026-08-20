@@ -33,6 +33,7 @@ const AdminProductForm = () => {
   const [imageTextSections, setImageTextSections] = useState([]);
   const [tags, setTags] = useState([]);
   const [status, setStatus] = useState('published');
+  const [volumeBundles, setVolumeBundles] = useState([]);
 
   const token = JSON.parse(localStorage.getItem('userInfo') || '{}').token;
 
@@ -77,6 +78,7 @@ const AdminProductForm = () => {
       setImageTextSections(product.imageTextSections || []);
       setTags(product.tags || []);
       setStatus(product.status || 'published');
+      setVolumeBundles(product.volumeBundles || []);
     } catch (error) {
       console.error("Error fetching product:", error);
     } finally {
@@ -88,7 +90,7 @@ const AdminProductForm = () => {
     e.preventDefault();
     
     const parsedData = {
-      name, sku, category, price: Number(price), stock: Number(stock), allowSellWithoutStock, image, images, variations, faq, description, longDescription, imageTextSections, tags, status,
+      name, sku, category, price: Number(price), stock: Number(stock), allowSellWithoutStock, image, images, variations, faq, description, longDescription, imageTextSections, tags, status, volumeBundles,
       sellPrice: sellPrice ? Number(sellPrice) : null,
       keypoints: keypoints.split(',').map(s => s.trim()).filter(Boolean)
     };
@@ -146,6 +148,19 @@ const AdminProductForm = () => {
     }
   };
   const removeTag = (idx) => setTags(tags.filter((_, i) => i !== idx));
+
+  // --- Volume Bundles Handlers ---
+  const addVolumeBundle = () => {
+    setVolumeBundles([...volumeBundles, { qty: 2, discountType: 'percentage', discountValue: 0, text: '', image: '' }]);
+  };
+  const removeVolumeBundle = (idx) => {
+    setVolumeBundles(volumeBundles.filter((_, i) => i !== idx));
+  };
+  const updateVolumeBundle = (idx, field, val) => {
+    const newBundles = [...volumeBundles];
+    newBundles[idx][field] = val;
+    setVolumeBundles(newBundles);
+  };
 
   // --- FAQ Handlers ---
   const addFaq = () => setFaq([...faq, { question: '', answer: '' }]);
@@ -282,6 +297,58 @@ const AdminProductForm = () => {
                       </span>
                     ))}
                     <input type="text" className="input-field" placeholder="Type option & press Enter" onKeyDown={(e) => addOption(vIdx, e)} style={{ width: '200px', padding: '0.35rem 0.75rem', fontSize: '0.875rem' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Volume Bundles Builder */}
+            <div style={{ padding: '1.5rem', border: '1px solid var(--border-color)', borderRadius: '8px', background: '#fff' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, margin: 0 }}>Combo Bundles (Quantity Discounts)</h3>
+                <button type="button" className="btn btn-secondary" onClick={addVolumeBundle} style={{ padding: '0.5rem 1rem' }}><Plus size={16} /> Add Tier</button>
+              </div>
+              
+              {volumeBundles.length === 0 && <p className="text-muted" style={{ fontSize: '0.9rem' }}>No combo bundles added.</p>}
+              
+              {volumeBundles.map((b, bIdx) => (
+                <div key={bIdx} style={{ background: '#f9fafb', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', border: '1px solid var(--border-color)', position: 'relative' }}>
+                  <button type="button" onClick={() => removeVolumeBundle(bIdx)} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}><Trash2 size={18} /></button>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                    <div>
+                      <label style={{display:'block',marginBottom:'.25rem',fontWeight:500, fontSize:'0.9rem'}}>Quantity</label>
+                      <input type="number" className="input-field" value={b.qty} onChange={e => updateVolumeBundle(bIdx, 'qty', Number(e.target.value))} min="2" />
+                    </div>
+                    <div>
+                      <label style={{display:'block',marginBottom:'.25rem',fontWeight:500, fontSize:'0.9rem'}}>Discount Type</label>
+                      <select className="input-field" value={b.discountType} onChange={e => updateVolumeBundle(bIdx, 'discountType', e.target.value)}>
+                        <option value="percentage">Percentage (%)</option>
+                        <option value="fixed">Fixed Amount</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{display:'block',marginBottom:'.25rem',fontWeight:500, fontSize:'0.9rem'}}>Discount Value</label>
+                      <input type="number" step="0.01" className="input-field" value={b.discountValue} onChange={e => updateVolumeBundle(bIdx, 'discountValue', Number(e.target.value))} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{display:'block',marginBottom:'.25rem',fontWeight:500, fontSize:'0.9rem'}}>Title / Badge Text (Optional)</label>
+                      <input type="text" className="input-field" value={b.text || ''} onChange={e => updateVolumeBundle(bIdx, 'text', e.target.value)} placeholder="e.g. Most Popular!" />
+                    </div>
+                    <div>
+                      <label style={{display:'block',marginBottom:'.25rem',fontWeight:500, fontSize:'0.9rem'}}>Image (Optional)</label>
+                      {b.image ? (
+                        <div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+                          <img src={b.image} alt="Bundle" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <button type="button" onClick={() => updateVolumeBundle(bIdx, 'image', '')} style={{ position:'absolute', top: 2, right: 2, background:'#fff', borderRadius:'50%', padding: 2, border:'none', cursor:'pointer' }}><XCircle size={14} color="#ef4444" /></button>
+                        </div>
+                      ) : (
+                        <button type="button" className="btn btn-secondary" onClick={() => setPickerType(`bundle_${bIdx}`)} style={{ width: '80px', height: '80px', display: 'flex', flexDirection: 'column', gap: '0.25rem', border: '2px dashed var(--border-color)', padding: 0, justifyContent: 'center' }}>
+                          <ImageIcon size={18} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -477,6 +544,9 @@ const AdminProductForm = () => {
           else if (pickerType?.startsWith('section_')) {
             const secId = pickerType.split('_')[1];
             updateImageTextSection(secId, 'image', selection);
+          } else if (pickerType?.startsWith('bundle_')) {
+            const bIdx = parseInt(pickerType.split('_')[1]);
+            updateVolumeBundle(bIdx, 'image', selection);
           } else if (pickerType === 'jodit' && joditTargetRef.current) {
             const editor = joditTargetRef.current;
             editor.s.restore();

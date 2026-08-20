@@ -8,6 +8,7 @@ import ExpressCheckoutModal from './ExpressCheckoutModal';
 
 const ProductCard = ({ product, showRating }) => {
   const addToCart = useCartStore((state) => state.addToCart);
+  const setIsCartOpen = useCartStore((state) => state.setIsCartOpen);
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const [isHovered, setIsHovered] = useState(false);
   const isProductFavorite = isFavorite(product.id || product._id);
@@ -18,7 +19,7 @@ const ProductCard = ({ product, showRating }) => {
     e.preventDefault();
     addToCart(product);
     setIsAdded(true);
-    toast.success('কার্টে যোগ করা হয়েছে!');
+    setIsCartOpen(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
 

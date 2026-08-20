@@ -20,6 +20,7 @@ const ProductDetails = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   
   const addToCart = useCartStore((state) => state.addToCart);
+  const setIsCartOpen = useCartStore((state) => state.setIsCartOpen);
 
   const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false);
   const [qbName, setQbName] = useState('');
@@ -32,7 +33,6 @@ const ProductDetails = () => {
   
   // Bundle States
   const [bundles, setBundles] = useState([]);
-  const [volumeBundle, setVolumeBundle] = useState(null);
   const [comboBundle, setComboBundle] = useState(null);
   const [comboProducts, setComboProducts] = useState([]);
 
@@ -87,9 +87,6 @@ const ProductDetails = () => {
           const bundleData = await bundleRes.json();
           setBundles(bundleData);
           
-          const volBundle = bundleData.find(b => b.type === 'volume');
-          if (volBundle) setVolumeBundle(volBundle);
-          
           const cmbBundle = bundleData.find(b => b.type === 'combo');
           if (cmbBundle && cmbBundle.products) {
             setComboBundle(cmbBundle);
@@ -115,9 +112,23 @@ const ProductDetails = () => {
   }, [slug]);
 
   const handleAddToCart = () => {
-    addToCart({ ...product, qty, selectedVariations });
+    let bundleDiscount = 0;
+    if (product.volumeBundles && product.volumeBundles.length > 0) {
+      const sortedTiers = [...product.volumeBundles].sort((a, b) => b.qty - a.qty);
+      const appliedTier = sortedTiers.find(t => qty >= t.qty);
+      if (appliedTier) {
+        const basePrice = Number(product.sellPrice || product.price);
+        if (appliedTier.discountType === 'percentage') {
+          bundleDiscount = (basePrice * appliedTier.discountValue) / 100;
+        } else {
+          bundleDiscount = appliedTier.discountValue / appliedTier.qty;
+        }
+      }
+    }
+
+    addToCart({ ...product, qty, selectedVariations, bundleDiscount: Number(bundleDiscount.toFixed(2)) });
     setIsAdded(true);
-    toast.success('Added to cart');
+    setIsCartOpen(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
 
@@ -161,7 +172,7 @@ const ProductDetails = () => {
     });
     
     setIsAdded(true);
-    toast.success('Bundle added to cart');
+    setIsCartOpen(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
 
@@ -311,78 +322,123 @@ const ProductDetails = () => {
             </div>
           ))}
 
-          {/* Volume Bundle (Quantity Breaks) */}
-          {volumeBundle && volumeBundle.volumeTiers && (
-            <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ color: 'var(--accent-primary)' }}>✨</span> Volume Discounts
-              </h3>
+          {/* Volume Bundles (Quantity Discounts) */}
+          {product.volumeBundles && product.volumeBundles.length > 0 ? (
+            <div style={{ marginBottom: '2rem' }}>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '1rem', fontSize: '1.1rem' }}>পরিমাণ নির্বাচন করুন (Combo Offer)</label>
               <div style={{ display: 'grid', gap: '0.75rem' }}>
-                {volumeBundle.volumeTiers.sort((a,b) => a.qty - b.qty).map((tier, idx) => (
-                  <label 
-                    key={idx} 
-                    style={{ 
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-                      padding: '1rem', background: '#fff', borderRadius: '8px', 
-                      border: qty === tier.qty ? '2px solid var(--accent-primary)' : '1px solid var(--border-color)',
-                      cursor: 'pointer', transition: 'all 0.2s'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <input 
-                        type="radio" 
-                        name="volumeTier" 
-                        checked={qty === tier.qty} 
-                        onChange={() => setQty(tier.qty)} 
-                        style={{ accentColor: 'var(--accent-primary)', width: '18px', height: '18px' }}
-                      />
-                      <span style={{ fontWeight: 600 }}>Buy {tier.qty} Items</span>
+                
+                {/* Default Buy 1 Row */}
+                <label 
+                  style={{ 
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                    padding: '1rem', background: '#fff', borderRadius: '8px', 
+                    border: qty === 1 ? '2px solid var(--accent-primary)' : '1px solid var(--border-color)',
+                    cursor: 'pointer', transition: 'all 0.2s', position: 'relative', overflow: 'hidden'
+                  }}
+                >
+                  {qty === 1 && <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--accent-primary)' }}></div>}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <input type="radio" name="qtySelect" checked={qty === 1} onChange={() => setQty(1)} style={{ accentColor: 'var(--accent-primary)', width: '18px', height: '18px', flexShrink: 0 }} />
+                    <img src={mainImage} alt={product.name} style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e2e8f0', flexShrink: 0 }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                      <span style={{ fontWeight: 600 }}>1 পিস কিনুন</span>
                     </div>
-                    <span style={{ background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: 600 }}>
-                      Save {tier.discount}%
-                    </span>
-                  </label>
-                ))}
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--accent-primary)' }}>{Number(product.sellPrice || product.price).toFixed(2)} BDT</div>
+                  </div>
+                </label>
+
+                {/* Bundle Rows */}
+                {[...product.volumeBundles].sort((a,b) => a.qty - b.qty).map((tier, idx) => {
+                  const basePrice = Number(product.sellPrice || product.price);
+                  const originalTotal = basePrice * tier.qty;
+                  let discountTotal = 0;
+                  if (tier.discountType === 'percentage') {
+                    discountTotal = (originalTotal * tier.discountValue) / 100;
+                  } else {
+                    discountTotal = tier.discountValue;
+                  }
+                  const finalTotal = originalTotal - discountTotal;
+
+                  return (
+                    <label 
+                      key={idx} 
+                      style={{ 
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                        padding: '1rem', background: '#fff', borderRadius: '8px', 
+                        border: qty === tier.qty ? '2px solid var(--accent-primary)' : '1px solid var(--border-color)',
+                        cursor: 'pointer', transition: 'all 0.2s', position: 'relative', overflow: 'hidden'
+                      }}
+                    >
+                      {qty === tier.qty && <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'var(--accent-primary)' }}></div>}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <input type="radio" name="qtySelect" checked={qty === tier.qty} onChange={() => setQty(tier.qty)} style={{ accentColor: 'var(--accent-primary)', width: '18px', height: '18px', flexShrink: 0 }} />
+                        {tier.image && (
+                          <img src={tier.image} alt="Bundle" style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #e2e8f0', flexShrink: 0 }} />
+                        )}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                            <span style={{ fontWeight: 600 }}>{tier.qty} পিস কিনুন</span>
+                            {tier.text && (
+                              <span style={{ background: '#ef4444', color: '#fff', fontSize: '0.7rem', padding: '0.1rem 0.4rem', borderRadius: '4px', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                                {tier.text}
+                              </span>
+                            )}
+                          </div>
+                          <span style={{ color: '#166534', fontSize: '0.85rem', fontWeight: 600 }}>
+                            {tier.discountType === 'percentage' ? `${tier.discountValue}% ছাড়` : `${tier.discountValue} BDT ছাড়`}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ textDecoration: 'line-through', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{originalTotal.toFixed(2)} BDT</div>
+                        <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--accent-primary)' }}>{finalTotal.toFixed(2)} BDT</div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                <label style={{ fontWeight: '600' }}>পরিমাণ</label>
+                <select className="input-field" style={{ width: '100px' }} value={qty} onChange={(e) => setQty(Number(e.target.value))}>
+                  {[...Array(product.allowSellWithoutStock ? 10 : (product.stock > 0 ? Math.min(product.stock, 10) : 0)).keys()].map(x => (
+                    <option key={x+1} value={x+1}>{x+1}</option>
+                  ))}
+                </select>
               </div>
             </div>
           )}
 
-          {/* Quantity & Actions */}
-          <div style={{ marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-              <label style={{ fontWeight: '600' }}>পরিমাণ</label>
-              <select className="input-field" style={{ width: '100px' }} value={qty} onChange={(e) => setQty(Number(e.target.value))}>
-                {[...Array(product.allowSellWithoutStock ? 10 : (product.stock > 0 ? Math.min(product.stock, 10) : 0)).keys()].map(x => (
-                  <option key={x+1} value={x+1}>{x+1}</option>
-                ))}
-              </select>
-            </div>
+          {/* Actions */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', flexDirection: 'row', marginBottom: '2rem' }}>
+            <button 
+              className="btn" 
+              disabled={product.stock <= 0 && !product.allowSellWithoutStock}
+              onClick={handleAddToCart}
+              style={{ 
+                background: isAdded ? 'var(--accent-primary)' : 'var(--bg-secondary)', 
+                color: isAdded ? 'white' : 'var(--text-primary)', 
+                border: isAdded ? '2px solid var(--accent-primary)' : '2px solid var(--text-primary)',
+                padding: '1rem', fontSize: '1.1rem', fontWeight: '600', flex: 1,
+                transition: 'all 0.3s'
+              }}
+            >
+              {(product.stock <= 0 && !product.allowSellWithoutStock) ? 'স্টক শেষ' : (isAdded ? 'কার্টে যোগ করা হয়েছে ✓' : 'কার্টে যোগ করুন')}
+            </button>
             
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', flexDirection: 'row' }}>
-              <button 
-                className="btn" 
-                disabled={product.stock <= 0 && !product.allowSellWithoutStock}
-                onClick={handleAddToCart}
-                style={{ 
-                  background: isAdded ? 'var(--accent-primary)' : 'var(--bg-secondary)', 
-                  color: isAdded ? 'white' : 'var(--text-primary)', 
-                  border: isAdded ? '2px solid var(--accent-primary)' : '2px solid var(--text-primary)',
-                  padding: '1rem', fontSize: '1.1rem', fontWeight: '600', flex: 1,
-                  transition: 'all 0.3s'
-                }}
-              >
-                {(product.stock <= 0 && !product.allowSellWithoutStock) ? 'স্টক শেষ' : (isAdded ? 'কার্টে যোগ করা হয়েছে ✓' : 'কার্টে যোগ করুন')}
-              </button>
-              
-              <button 
-                className="btn btn-primary" 
-                disabled={product.stock <= 0 && !product.allowSellWithoutStock}
-                onClick={handleBuyNow}
-                style={{ padding: '1rem', fontSize: '1.1rem', fontWeight: '600', flex: 1 }}
-              >
-                এখুনি কিনুন
-              </button>
-            </div>
+            <button 
+              className="btn btn-primary" 
+              disabled={product.stock <= 0 && !product.allowSellWithoutStock}
+              onClick={handleBuyNow}
+              style={{ padding: '1rem', fontSize: '1.1rem', fontWeight: '600', flex: 1 }}
+            >
+              এখুনি কিনুন
+            </button>
           </div>
 
           {/* Low Stock Indicator */}

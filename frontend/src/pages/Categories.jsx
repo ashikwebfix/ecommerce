@@ -170,7 +170,7 @@ const Categories = () => {
                   }}
                 >
                   <img 
-                    src={category.image || 'https://via.placeholder.com/400?text=No+Image'} 
+                    src={category.image || 'https://placehold.co/400x400?text=No+Image'} 
                     alt={category.name}
                     className="cat-img"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}

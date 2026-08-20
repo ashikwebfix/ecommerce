@@ -9,9 +9,17 @@ const MobileBottomNav = () => {
   const cartItems = useCartStore((state) => state.cartItems);
   const cartItemCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
   const favorites = useFavoritesStore((state) => state.favorites);
+  const setIsCartOpen = useCartStore((state) => state.setIsCartOpen);
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null');
 
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isActive = (path) => location.pathname === path;
+
+  if (!mounted) return null;
 
   return (
     <div className="mobile-bottom-nav">
@@ -32,7 +40,7 @@ const MobileBottomNav = () => {
           </span>
         )}
       </Link>
-      <Link to="/cart" className={`nav-item ${isActive('/cart') ? 'active' : ''}`} style={{ position: 'relative' }}>
+      <button onClick={() => setIsCartOpen(true)} className="nav-item" style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer' }}>
         <Icons.ShoppingCart size={24} />
         <span>Cart</span>
         {cartItemCount > 0 && (
@@ -40,7 +48,7 @@ const MobileBottomNav = () => {
             {cartItemCount}
           </span>
         )}
-      </Link>
+      </button>
       <Link to={userInfo && userInfo.token ? "/profile" : "/login"} className={`nav-item ${isActive('/profile') ? 'active' : ''}`}>
         <Icons.User size={24} />
         <span>Account</span>
